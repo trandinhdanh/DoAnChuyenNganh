@@ -22,6 +22,8 @@ public class AnswerConverter {
     }
 
     public AnswerEntity toEntity(AnswerDTO dto, AnswerEntity entity) {
+        entity.setAnswer(dto.getAnswer());
+        entity.setCorrectAnswer(dto.isCorrectAnswer());
         return entity;
     }
 }

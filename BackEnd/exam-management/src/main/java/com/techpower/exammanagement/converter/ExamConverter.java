@@ -20,6 +20,7 @@ public class ExamConverter {
     }
 
     public ExamEntity toEntity(ExamDTO dto, ExamEntity entity) {
+        entity.setQuestion(dto.getQuestion());
         return entity;
     }
 }
