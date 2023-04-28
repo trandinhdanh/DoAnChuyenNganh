@@ -25,4 +25,13 @@ public class TeacherEntity {
     @OneToOne
     @JoinColumn(name = "user_id")
     private UserEntity user;
+
+    @Override
+    public String toString() {
+        return "TeacherEntity{" +
+                "id=" + id +
+                ", name='" + fullName + '\'' +
+                ", birthday='" + birthday + '\'' +
+                '}';
+    }
 }

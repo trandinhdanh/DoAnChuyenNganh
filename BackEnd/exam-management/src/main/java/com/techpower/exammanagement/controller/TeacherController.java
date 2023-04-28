@@ -3,10 +3,13 @@ package com.techpower.exammanagement.controller;
 import com.techpower.exammanagement.dto.TeacherDTO;
 import com.techpower.exammanagement.service.ITeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
@@ -53,8 +56,8 @@ public class TeacherController {
         return iTeacherService.update(dto);
     }
 
-    @DeleteMapping("/teacher")
-    public void deleteProduct(@RequestBody long[] ids) {
-        iTeacherService.remove(ids);
+    @DeleteMapping("/teacher/{id}")
+    public void deleteProduct(@PathVariable long id) {
+        iTeacherService.remove(id);
     }
 }

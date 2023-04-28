@@ -13,5 +13,5 @@ public interface ITeacherService {
 
     TeacherDTO update(TeacherDTO teacher);
 
-    void remove(long[] ids);
+    void remove(long id);
 }

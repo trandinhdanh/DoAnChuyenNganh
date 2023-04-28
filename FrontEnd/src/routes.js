@@ -9,6 +9,9 @@ import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
+import NewTeacher from './pages/NewTeacher';
+import StudentPage from './pages/StudentPage';
+import NewStudent from './pages/NewStudent';
 
 // ----------------------------------------------------------------------
 
@@ -21,6 +24,9 @@ export default function Router() {
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
         { path: 'user', element: <UserPage /> },
+        { path: 'student', element: <StudentPage /> },
+        { path: 'teacherNew', element: <NewTeacher /> },
+        { path: 'studentNew', element: <NewStudent /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
       ],

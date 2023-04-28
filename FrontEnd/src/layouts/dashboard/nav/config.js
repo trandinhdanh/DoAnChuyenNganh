@@ -12,8 +12,13 @@ const navConfig = [
     icon: icon('ic_analytics'),
   },
   {
-    title: 'user',
+    title: 'Teacher',
     path: '/dashboard/user',
+    icon: icon('ic_user'),
+  },
+  {
+    title: 'Student',
+    path: '/dashboard/student',
     icon: icon('ic_user'),
   },
   {
