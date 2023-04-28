@@ -159,7 +159,7 @@ export default function UserPage() {
             <TableCell align="right">Name</TableCell>
             <TableCell align="right">Birth Day</TableCell>
             <TableCell align="right">Positon</TableCell>
-            <TableCell align="right">Delete</TableCell>
+            <TableCell align="right">Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -179,6 +179,12 @@ export default function UserPage() {
                  }} variant="outlined" color="error">
                    Delete
               </Button>
+             
+              <Button onClick={() => { 
+                  navigate(`/dashboard/teacherUpdate/${row.id}`)
+                 }} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+            Update
+          </Button>
               </TableCell>
             </TableRow>
           ))}

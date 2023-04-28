@@ -10,7 +10,7 @@ const teacherApi = {
   },
 
   getById: async (id) => {
-    const response = await axios.get(`${BASE_URL}/teachers/${id}`);
+    const response = await axios.get(`${BASE_URL}/teacher/${id}`);
     return response.data;
   },
 

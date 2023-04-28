@@ -12,6 +12,8 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import NewTeacher from './pages/NewTeacher';
 import StudentPage from './pages/StudentPage';
 import NewStudent from './pages/NewStudent';
+import UpdateTeacher from './pages/UpdateTeacher';
+import UpdateStudent from './pages/UpdateStudent';
 
 // ----------------------------------------------------------------------
 
@@ -26,6 +28,8 @@ export default function Router() {
         { path: 'user', element: <UserPage /> },
         { path: 'student', element: <StudentPage /> },
         { path: 'teacherNew', element: <NewTeacher /> },
+        { path: 'teacherUpdate/:id', element: <UpdateTeacher /> },
+        { path: 'studentUpdate/:id', element: <UpdateStudent /> },
         { path: 'studentNew', element: <NewStudent /> },
         { path: 'products', element: <ProductsPage /> },
         { path: 'blog', element: <BlogPage /> },
