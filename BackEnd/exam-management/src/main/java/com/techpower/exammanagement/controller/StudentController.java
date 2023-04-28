@@ -9,22 +9,23 @@ import java.util.Date;
 import java.util.List;
 
 @RestController
+@RequestMapping("api/v1/students")
 @CrossOrigin(origins = "*")
 public class StudentController {
     @Autowired
     private IStudentService iStudentService;
 
-    @GetMapping("/student/list")
+    @GetMapping
     public List<StudentDTO> getAll() {
         return iStudentService.getAll();
     }
 
-    @GetMapping("/student/{id}")
+    @GetMapping("/{id}")
     public StudentDTO getDetail(@PathVariable long id) {
         return iStudentService.getDetail(id);
     }
 
-    @PostMapping("/student")
+    @PostMapping
     public StudentDTO save(@RequestParam("fullName") String fullName,
                            @RequestParam("gender") String gender,
                            @RequestParam("birthday") Date birthday) {
@@ -36,7 +37,7 @@ public class StudentController {
         return iStudentService.save(dto);
     }
 
-    @PutMapping("/student/{id}")
+    @PutMapping("/{id}")
     public StudentDTO updateProduct(@PathVariable("id") long id,
                                     @RequestParam("fullName") String fullName,
                                     @RequestParam("gender") String gender,
@@ -49,8 +50,8 @@ public class StudentController {
         return iStudentService.update(dto);
     }
 
-    @DeleteMapping("/student")
-    public void deleteProduct(@RequestBody long[] ids) {
-        iStudentService.remove(ids);
-    }
+//    @DeleteMapping("/student")
+//    public void deleteProduct(@RequestBody long[] ids) {
+//        iStudentService.remove(ids);
+//    }
 }

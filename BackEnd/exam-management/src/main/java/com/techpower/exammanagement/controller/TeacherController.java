@@ -1,60 +1,48 @@
 package com.techpower.exammanagement.controller;
 
 import com.techpower.exammanagement.dto.TeacherDTO;
-import com.techpower.exammanagement.service.ITeacherService;
+import com.techpower.exammanagement.entity.TeacherEntity;
+import com.techpower.exammanagement.service.TeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
 import java.util.List;
 
 @RestController
+@RequestMapping("api/v1/teachers")
 @CrossOrigin(origins = "*")
 public class TeacherController {
     @Autowired
-    private ITeacherService iTeacherService;
+    private TeacherService teacherService;
 
-    @GetMapping("/teacher/list")
-    public List<TeacherDTO> getAll() {
-        return iTeacherService.getAll();
+    @GetMapping
+    public List<TeacherEntity> getAll() {
+        return teacherService.getAllTeachers();
     }
 
-    @GetMapping("/teacher/{id}")
-    public TeacherDTO getDetail(@PathVariable long id) {
-        return iTeacherService.getDetail(id);
+    @GetMapping("/{id}")
+    public TeacherEntity getDetail(@PathVariable Long id) {
+        return teacherService.getTeacherById(id);
     }
 
-    @PostMapping("/teacher")
-    public TeacherDTO save(@RequestParam("fullName") String fullName,
-                           @RequestParam("gender") String gender,
-                           @RequestParam("birthday") Date birthday,
-                           @RequestParam("position") String position) {
-        //format mm/dd/yyyy
-        TeacherDTO dto = new TeacherDTO();
-        dto.setFullName(fullName);
-        dto.setGender(gender);
-        dto.setBirthday(birthday);
-        dto.setPosition(position);
-        return iTeacherService.save(dto);
+    @PostMapping
+    public ResponseEntity<?> save(@RequestBody TeacherEntity teacher) {
+        teacherService.addTeacher(teacher);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping("/teacher/{id}")
-    public TeacherDTO updateProduct(@PathVariable("id") long id,
-                                    @RequestParam("fullName") String fullName,
-                                    @RequestParam("gender") String gender,
-                                    @RequestParam("birthday") Date birthday,
-                                    @RequestParam("position") String position) {
-        TeacherDTO dto = new TeacherDTO();
-        dto.setId(id);
-        dto.setFullName(fullName);
-        dto.setGender(gender);
-        dto.setBirthday(birthday);
-        dto.setPosition(position);
-        return iTeacherService.update(dto);
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateProduct(@PathVariable Long id, @RequestBody TeacherEntity teacher) {
+teacherService.updateTeacherEntity(id, teacher);
+        return ResponseEntity.ok().build();
     }
 
-    @DeleteMapping("/teacher")
-    public void deleteProduct(@RequestBody long[] ids) {
-        iTeacherService.remove(ids);
+    @DeleteMapping("/{ids}")
+    public ResponseEntity<?> deleteProduct( @PathVariable List<Long> ids) {
+        teacherService.deleteTeacherEntity(ids);
+        return ResponseEntity.ok().build();
     }
 }

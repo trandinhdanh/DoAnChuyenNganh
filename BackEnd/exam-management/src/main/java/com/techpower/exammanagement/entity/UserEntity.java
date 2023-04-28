@@ -1,9 +1,11 @@
 package com.techpower.exammanagement.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,8 @@ import java.util.List;
 @Table(name = "user")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class UserEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -21,12 +25,8 @@ public class UserEntity {
     private String password;
     @Column
     private String status;
-    @ManyToMany
-    @JoinTable(name = "user_role", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "role_id"))
-    private List<RoleEntity> roles = new ArrayList<>();
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private TeacherEntity teacher;
-    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL)
-    private StudentEntity student;
+
+    @Enumerated(EnumType.STRING)
+    private Role role;
 
 }

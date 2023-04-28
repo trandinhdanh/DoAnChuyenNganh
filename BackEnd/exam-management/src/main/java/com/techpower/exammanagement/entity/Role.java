@@ -1,6 +1,8 @@
-package com.shop.medicineshop.model.user;
+package com.techpower.exammanagement.entity;
 
 public enum Role {
-    USER,
-    ADMIN
+
+    ADMIN,
+    TEACHER,
+    STUDENT
 }

@@ -1,9 +1,11 @@
 package com.techpower.exammanagement.entity;
 
+import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -11,6 +13,8 @@ import java.util.List;
 @Table(name = "exam")
 @Getter
 @Setter
+@NoArgsConstructor
+@AllArgsConstructor
 public class ExamEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

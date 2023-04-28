@@ -9,35 +9,36 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
+@RequestMapping("api/v1/exams")
 @CrossOrigin(origins = "*")
 public class ExamController {
     @Autowired
     private IExamService iExamService;
 
-    @GetMapping("/exam/list")
+    @GetMapping
     public List<ExamDTO> getAll() {
         return iExamService.getAll();
     }
 
-    @GetMapping("/exam/{id}")
+    @GetMapping("/{id}")
     public ExamDTO getDetail(@PathVariable long id) {
         return iExamService.getDetail(id);
     }
 
-    @PostMapping("/exam")
+    @PostMapping
     public ExamDTO save(@RequestBody ExamDTO dto) {
         return iExamService.save(dto);
     }
 
-    @PutMapping("/exam/{id}")
+    @PutMapping("/{id}")
     public ExamDTO update(@PathVariable long id, @RequestBody ExamDTO dto) {
         dto.setId(id);
         return iExamService.update(dto);
     }
 
-    @DeleteMapping("/exam")
-    @Transactional
-    public void deleteProduct(@RequestBody long[] ids) {
-        iExamService.remove(ids);
-    }
+//    @DeleteMapping("/exam")
+//    @Transactional
+//    public void deleteProduct(@RequestBody long[] ids) {
+//        iExamService.remove(ids);
+//    }
 }
