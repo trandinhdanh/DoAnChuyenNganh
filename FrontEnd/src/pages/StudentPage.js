@@ -158,7 +158,7 @@ export default function StudentPage() {
             <TableCell align="right">Id</TableCell>
             <TableCell align="right">Name</TableCell>
             <TableCell align="right">Birth Day</TableCell>
-            <TableCell align="right">Delete</TableCell>
+            <TableCell align="right">Action</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
@@ -177,6 +177,11 @@ export default function StudentPage() {
                  }} variant="outlined" color="error">
                    Delete
               </Button>
+              <Button onClick={() => { 
+                  navigate(`/dashboard/studentUpdate/${row.id}`)
+                 }} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+            Update
+          </Button>
               </TableCell>
             </TableRow>
           ))}
