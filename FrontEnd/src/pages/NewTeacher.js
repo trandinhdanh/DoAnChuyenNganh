@@ -31,6 +31,7 @@ export default function AddTeacherForm() {
         'Content-Type': 'multipart/form-data',
       },
     });
+    
     console.log(response.data);
   };
 
