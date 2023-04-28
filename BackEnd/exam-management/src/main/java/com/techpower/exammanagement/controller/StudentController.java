@@ -49,8 +49,9 @@ public class StudentController {
         return iStudentService.update(dto);
     }
 
-    @DeleteMapping("/student")
-    public void deleteProduct(@RequestBody long[] ids) {
-        iStudentService.remove(ids);
+    @DeleteMapping("/student/{id}")
+    public void deleteProduct(@PathVariable Long id) {
+        iStudentService.remove(id);
     }
+
 }

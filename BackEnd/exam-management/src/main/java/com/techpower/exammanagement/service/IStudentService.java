@@ -13,5 +13,5 @@ public interface IStudentService {
 
     StudentDTO update(StudentDTO student);
 
-    void remove(long[] ids);
+    void remove(Long id);
 }

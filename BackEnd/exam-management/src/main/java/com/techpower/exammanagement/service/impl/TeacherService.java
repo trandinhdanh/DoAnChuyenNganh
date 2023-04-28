@@ -77,19 +77,18 @@ public class TeacherService implements ITeacherService {
 
     @Override
     public TeacherDTO update(TeacherDTO dto) {
-        TeacherEntity teacherEntityOld =  teacherRepository.findOneById(dto.getId());
-        TeacherEntity teacherEntityNew = teacherConverter.toEntity(dto,teacherEntityOld);
+        TeacherEntity teacherEntityOld = teacherRepository.findOneById(dto.getId());
+        TeacherEntity teacherEntityNew = teacherConverter.toEntity(dto, teacherEntityOld);
         teacherRepository.save(teacherEntityNew);
         return teacherConverter.toDTO(teacherEntityNew);
     }
 
     @Override
-    public void remove(long[] ids) {
-        for (long id : ids) {
-            if (teacherRepository.findOneById(id) != null) {
-                userRepository.deleteById(id);
-                teacherRepository.deleteById(id);
-            }
+    public void remove(long id) {
+        if (teacherRepository.findOneById(id) != null) {
+            TeacherEntity teacherEntity = teacherRepository.findOneById(id);
+            teacherRepository.deleteById(id);
+            userRepository.deleteById(teacherEntity.getUser().getId());
         }
     }
 }

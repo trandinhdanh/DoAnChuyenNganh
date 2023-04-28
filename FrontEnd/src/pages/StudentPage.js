@@ -34,7 +34,7 @@ import Scrollbar from '../components/scrollbar';
 import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 import USERLIST from '../_mock/user';
-import teacherApi from '../services/TeacherAPI';
+import studentApi from '../services/StudentAPI';
 
 
 // ----------------------------------------------------------------------
@@ -79,7 +79,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function UserPage() {
+export default function StudentPage() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -93,17 +93,17 @@ export default function UserPage() {
   const [filterName, setFilterName] = useState('');
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [teachers, setTeachers] = useState([]);
+  const [students, setStudent] = useState([]);
   useEffect(() => {
     const fetchTeachers = async () => {
-      const data = await teacherApi.getAll();
-      setTeachers(data);
+      const data = await studentApi.getAll();
+      setStudent(data);
     };
     fetchTeachers();
   }, []);
   const navigate = useNavigate()
   const handleNavigateNew = () => { 
-    navigate('/dashboard/teacherNew')
+    navigate('/dashboard/studentNew')
    }
  
   const handleCloseMenu = () => {
@@ -125,7 +125,7 @@ export default function UserPage() {
   };
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:8027/teacher/${id}`);
+      const response = await axios.delete(`http://localhost:8027/student/${id}`);
       console.log(response.data);
     } catch (error) {
       console.error(error);
@@ -134,16 +134,16 @@ export default function UserPage() {
   return (
     <>
       <Helmet>
-        <title> Teacher | Minimal UI </title>
+        <title> Student | Minimal UI </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Teacher
+          Student
           </Typography>
           <Button onClick={handleNavigateNew} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Teacher
+            New Student
           </Button>
         </Stack>
 
@@ -158,12 +158,11 @@ export default function UserPage() {
             <TableCell align="right">Id</TableCell>
             <TableCell align="right">Name</TableCell>
             <TableCell align="right">Birth Day</TableCell>
-            <TableCell align="right">Positon</TableCell>
             <TableCell align="right">Delete</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {teachers.map((row) => (
+          {students.map((row) => (
             <TableRow
               key={row.name}
               sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
@@ -172,7 +171,6 @@ export default function UserPage() {
               <TableCell align="right">{row.id}</TableCell>
               <TableCell align="right">{row.fullName}</TableCell>
               <TableCell align="right">{row.birthday}</TableCell>
-              <TableCell align="right">{row.position}</TableCell>
               <TableCell align="right" onClick={() => { console.log("delete") }}>
                  <Button onClick={() => { 
                   handleDelete(row.id)

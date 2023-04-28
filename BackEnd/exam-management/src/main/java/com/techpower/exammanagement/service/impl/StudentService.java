@@ -77,19 +77,18 @@ public class StudentService implements IStudentService {
 
     @Override
     public StudentDTO update(StudentDTO student) {
-        StudentEntity studentEntityOld =  studentRepository.findOneById(student.getId());
-        StudentEntity studentEntityNew = studentConverter.toEntity(student,studentEntityOld);
+        StudentEntity studentEntityOld = studentRepository.findOneById(student.getId());
+        StudentEntity studentEntityNew = studentConverter.toEntity(student, studentEntityOld);
         studentRepository.save(studentEntityNew);
         return studentConverter.toDTO(studentEntityNew);
     }
 
     @Override
-    public void remove(long[] ids) {
-        for (long id : ids) {
-            if (studentRepository.findOneById(id) != null) {
-                userRepository.deleteById(id);
-                studentRepository.deleteById(id);
-            }
+    public void remove(Long id) {
+        if (studentRepository.findOneById(id) != null) {
+            StudentEntity studentEntity = studentRepository.findOneById(id);
+            studentRepository.deleteById(id);
+            userRepository.deleteById(studentEntity.getUser().getId());
         }
     }
 }

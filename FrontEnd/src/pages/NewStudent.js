@@ -1,32 +1,30 @@
-import { Button, TextField } from '@mui/material';
+import { Button, Stack, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
 import axios from 'axios';
+import Typography from '../theme/overrides/Typography';
 import teacherApi from '../services/TeacherAPI';
 
 // import { TextField, Button } from '@material-ui/core';
 
-export default function AddTeacherForm() {
+export default function NewStudent() {
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState('');
-  const [position, setPosition] = useState('');
   
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newDate =  format(new Date(birthday), 'MM/dd/yyyy')
-    console.log(name , gender , newDate , position)
+    console.log(name , gender , newDate )
     const formData = new FormData();
     formData.append('fullName', name);
     formData.append('gender', gender);
     formData.append('birthday', newDate);
-    formData.append('position', position);
     setName('');
     setGender('');
     setBirthday('');
-    setPosition('');
     
-    const response = await axios.post(`http://localhost:8027/teacher`, formData, {
+    const response = await axios.post(`http://localhost:8027/student`, formData, {
       headers: {
         'Content-Type': 'multipart/form-data',
       },
@@ -35,9 +33,9 @@ export default function AddTeacherForm() {
   };
 
   return (
-   <>
-        <h1>Add Teacher</h1>
-        <form onSubmit={handleSubmit}>
+    <>
+    <h1>Add Student</h1>
+    <form onSubmit={handleSubmit}>
       <TextField
         label="Name"
         variant="outlined"
@@ -69,19 +67,11 @@ export default function AddTeacherForm() {
           shrink: true,
         }}
       />
-      <TextField
-        label="Position"
-        variant="outlined"
-        value={position}
-        onChange={(e) => setPosition(e.target.value)}
-        margin="normal"
-        fullWidth
-        required
-      />
+     
       <Button type="submit" variant="contained" color="primary">
-        Add Teacher
+        Add Student
       </Button>
     </form>
-   </>
+    </>
   );
 }
