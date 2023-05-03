@@ -35,6 +35,7 @@ import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
 // mock
 import USERLIST from '../_mock/user';
 import teacherApi from '../services/TeacherAPI';
+import { fDate } from '../utils/formatTime';
 
 
 // ----------------------------------------------------------------------
@@ -171,7 +172,7 @@ export default function UserPage() {
             
               <TableCell align="right">{row.id}</TableCell>
               <TableCell align="right">{row.fullName}</TableCell>
-              <TableCell align="right">{row.birthday}</TableCell>
+              <TableCell align="right"> {fDate(row.birthday)}</TableCell>
               <TableCell align="right">{row.position}</TableCell>
               <TableCell align="right" onClick={() => { console.log("delete") }}>
                  <Button onClick={() => { 
