@@ -1,23 +1,30 @@
 package com.techpower.exammanagement.service.impl;
 
+import com.techpower.exammanagement.auth.AuthenticationResponse;
 import com.techpower.exammanagement.constant.RoleConstant;
 import com.techpower.exammanagement.constant.UserConstant;
 import com.techpower.exammanagement.converter.TeacherConverter;
+import com.techpower.exammanagement.dto.StudentDTO;
 import com.techpower.exammanagement.dto.TeacherDTO;
 import com.techpower.exammanagement.entity.RoleEntity;
+import com.techpower.exammanagement.entity.StudentEntity;
 import com.techpower.exammanagement.entity.TeacherEntity;
 import com.techpower.exammanagement.entity.UserEntity;
 import com.techpower.exammanagement.repository.RoleRepository;
 import com.techpower.exammanagement.repository.TeacherRepository;
 import com.techpower.exammanagement.repository.UserRepository;
 import com.techpower.exammanagement.service.ITeacherService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 
 @Service
+@RequiredArgsConstructor
 public class TeacherService implements ITeacherService {
     @Autowired
     private TeacherRepository teacherRepository;
@@ -27,6 +34,8 @@ public class TeacherService implements ITeacherService {
     private UserRepository userRepository;
     @Autowired
     private RoleRepository roleRepository;
+    private final JwtService jwtService;
+    private final PasswordEncoder passwordEncoder;
 
     @Override
     public List<TeacherDTO> getAll() {
@@ -43,11 +52,20 @@ public class TeacherService implements ITeacherService {
     }
 
     @Override
-    public TeacherDTO save(TeacherDTO dto) {
+    public List<TeacherDTO> filterFullName(String fullName) {
+        List<TeacherDTO> teacherDTOS = new ArrayList<>();
+        for (TeacherEntity teacherEntity : teacherRepository.findByFullNameContaining(fullName)) {
+            teacherDTOS.add(teacherConverter.toDTO(teacherEntity));
+        }
+        return teacherDTOS;
+    }
+
+    @Override
+    public AuthenticationResponse save(TeacherDTO dto) {
         TeacherEntity entity = teacherConverter.toEntity(dto);
 
         UserEntity userEntity = new UserEntity();
-        userEntity.setUserName(dto.getFullName().replaceAll("\\s+", "").toLowerCase());
+        userEntity.setUsername(dto.getFullName().replaceAll("\\s+", "").toLowerCase());
         StringBuilder password = new StringBuilder();
         if (dto.getBirthday().getDate() > 9) {
             password.append(dto.getBirthday().getDate());
@@ -62,7 +80,7 @@ public class TeacherService implements ITeacherService {
             password.append(dto.getBirthday().getMonth() + 1);
         }
         password.append((dto.getBirthday().getYear() + 1900));
-        userEntity.setPassword(password.toString());
+        userEntity.setPassword(passwordEncoder.encode(password.toString()));
         userEntity.setStatus(UserConstant.ACTIVE);
 
         List<RoleEntity> roleEntities = new ArrayList<>();
@@ -72,7 +90,11 @@ public class TeacherService implements ITeacherService {
 
         entity.setUser(userEntity);
         teacherRepository.save(entity);
-        return teacherConverter.toDTO(entity);
+
+        var jwtToken = jwtService.generateToken(userEntity);
+        return AuthenticationResponse.builder()
+                .token(jwtToken)
+                .build();
     }
 
     @Override
@@ -84,6 +106,7 @@ public class TeacherService implements ITeacherService {
     }
 
     @Override
+    @Transactional
     public void remove(long id) {
         if (teacherRepository.findOneById(id) != null) {
             TeacherEntity teacherEntity = teacherRepository.findOneById(id);
