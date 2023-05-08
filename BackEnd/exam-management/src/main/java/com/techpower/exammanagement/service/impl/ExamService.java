@@ -11,6 +11,7 @@ import com.techpower.exammanagement.repository.ExamRepository;
 import com.techpower.exammanagement.service.IExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -104,13 +105,12 @@ public class ExamService implements IExamService {
     }
 
     @Override
-    public void remove(long[] ids) {
-        for (long id : ids) {
-            if (examRepository.findOneById(id) != null) {
-                ExamEntity examEntity = examRepository.findOneById(id);
-                answerRepository.deleteAllByExam(examEntity);
-                examRepository.deleteById(id);
-            }
+    @Transactional
+    public void remove(long id) {
+        if (examRepository.findOneById(id) != null) {
+            ExamEntity examEntity = examRepository.findOneById(id);
+            answerRepository.deleteAllByExam(examEntity);
+            examRepository.deleteById(id);
         }
     }
 }
