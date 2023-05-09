@@ -1,7 +1,5 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
-import { sentenceCase } from 'change-case';
-import axios from 'axios';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -10,11 +8,8 @@ import {
   Card,
   Table,
   Stack,
-  Paper,
-  Avatar,
   Button,
   Popover,
-  Checkbox,
   TableRow,
   TableHead,
   MenuItem,
@@ -27,26 +22,17 @@ import {
   TablePagination,
 } from '@mui/material';
 // components
-import Label from '../components/label';
-import Iconify from '../components/iconify';
-import Scrollbar from '../components/scrollbar';
+import Iconify from '../../components/iconify';
+import Scrollbar from '../../components/scrollbar';
 // sections
-import { UserListHead, UserListToolbar } from '../sections/@dashboard/user';
+import { UserListToolbar } from '../../sections/@dashboard/user';
 // mock
-import USERLIST from '../_mock/user';
-import studentApi from '../services/StudentAPI';
+// import USERLIST from '../_mock/user';
+import teacherApi from '../../services/TeacherAPI';
+import { fDate } from '../../utils/formatTime';
 
 
 // ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Gender', alignRight: false },
-  { id: 'role', label: 'Positon', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
-];
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +65,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function StudentPage() {
+export default function TeacherPage() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -92,20 +78,28 @@ export default function StudentPage() {
 
   const [filterName, setFilterName] = useState('');
 
+  // lấy id của row trong bảng 
+  const [idRow, setIdRow] = useState(-1)
+
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [students, setStudent] = useState([]);
+
+  const [teachers, setTeachers] = useState([]);
   useEffect(() => {
     const fetchTeachers = async () => {
-      const data = await studentApi.getAll();
-      setStudent(data);
+      const data = await teacherApi.getAll();
+      setTeachers(data);
     };
     fetchTeachers();
   }, []);
   const navigate = useNavigate()
-  const handleNavigateNew = () => { 
-    navigate('/dashboard/studentNew')
-   }
- 
+  const handleNavigateNew = () => {
+    navigate('/dashboard/teacherNew')
+  }
+
+  const handleOpenMenu = (event, id) => {
+    setIdRow(id);
+    setOpen(event.currentTarget);
+  };
   const handleCloseMenu = () => {
     setOpen(null);
   };
@@ -125,25 +119,29 @@ export default function StudentPage() {
   };
   const handleDelete = async (id) => {
     try {
-      const response = await axios.delete(`http://localhost:8027/student/${id}`);
-      console.log(response.data);
+      if (idRow !== -1) {
+        teacherApi.delete(id);
+        console.log("deleted");
+        setIdRow(-1);
+      }
     } catch (error) {
-      console.error(error);
+      console.error("deleted error", error);
     }
+    // navigate('/dashboard/teacher')
   }
   return (
     <>
       <Helmet>
-        <title> Student | Minimal UI </title>
+        <title> Teacher | Minimal UI </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-          Student
+            Teacher
           </Typography>
           <Button onClick={handleNavigateNew} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Student
+            New Teacher
           </Button>
         </Stack>
 
@@ -152,48 +150,43 @@ export default function StudentPage() {
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
-            <Table sx={{ minWidth: 650 }} aria-label="simple table">
-        <TableHead>
-          <TableRow>
-            <TableCell align="right">Id</TableCell>
-            <TableCell align="right">Name</TableCell>
-            <TableCell align="right">Birth Day</TableCell>
-            <TableCell align="right">Action</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {students.map((row) => (
-            <TableRow
-              key={row.name}
-              sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-            >
-            
-              <TableCell align="right">{row.id}</TableCell>
-              <TableCell align="right">{row.fullName}</TableCell>
-              <TableCell align="right">{row.birthday}</TableCell>
-              <TableCell align="right" onClick={() => { console.log("delete") }}>
-                 <Button onClick={() => { 
-                  handleDelete(row.id)
-                 }} variant="outlined" color="error">
-                   Delete
-              </Button>
-              <Button onClick={() => { 
-                  navigate(`/dashboard/studentUpdate/${row.id}`)
-                 }} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            Update
-          </Button>
-              </TableCell>
-            </TableRow>
-          ))}
-        </TableBody>
-      </Table>
+              <Table sx={{ minWidth: 650 }} aria-label="simple table">
+                <TableHead>
+                  <TableRow>
+                    <TableCell align="right">Id</TableCell>
+                    <TableCell align="right">Name</TableCell>
+                    <TableCell align="right">Birth Day</TableCell>
+                    <TableCell align="right">Positon</TableCell>
+                    <TableCell align="right">Action</TableCell>
+                  </TableRow>
+                </TableHead>
+                <TableBody>
+                  {teachers.map((row) => (
+                    <TableRow
+                      key={row.id}
+                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
+                    >
+                      <TableCell align="right">{row.id}</TableCell>
+                      <TableCell align="right">{row.fullName}</TableCell>
+                      <TableCell align="right"> {fDate(row.birthday)}</TableCell>
+                      <TableCell align="right">{row.position}</TableCell>
+                      <TableCell align="right">
+
+                        <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, row.id)}>
+                          <Iconify icon={'eva:more-vertical-fill'} />
+                        </IconButton>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
             </TableContainer>
           </Scrollbar>
 
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={USERLIST.length}
+            count={teachers.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -220,16 +213,22 @@ export default function StudentPage() {
           },
         }}
       >
-        <MenuItem>
+        <MenuItem onClick={() => {
+          navigate(`/dashboard/teacherUpdate/${idRow}`)
+        }} >
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
         </MenuItem>
 
-        <MenuItem sx={{ color: 'error.main' }}>
+        <MenuItem sx={{ color: 'error.main' }}
+          onClick={() => {
+            handleDelete(idRow)
+          }}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
           Delete
         </MenuItem>
       </Popover>
+
     </>
   );
 }

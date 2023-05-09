@@ -46,13 +46,24 @@ const StyledContent = styled('div')(({ theme }) => ({
 export default function LoginPage() {
   const mdUp = useResponsive('up', 'md');
 
-  const {user} = useAuth();
+  const { user, getScopes, logout } = useAuth();
   const navigate = useNavigate();
+  const adminDefaultPath = "/dashboard/app";
+  const teacherDefaultPath = "/dashboard/student";
+  const studentDefaultPath = "/dashboard/blog";
 
   useEffect(() => {
-      if (user) {
-          navigate("/dashboard/app")
+    if (user) {
+      if (getScopes().includes("ADMIN")) {
+        navigate(adminDefaultPath)
       }
+      else if (getScopes().includes("TEACHER")) {
+        navigate(teacherDefaultPath)
+      }
+      else if (getScopes().includes("STUDENT")) {
+        navigate(studentDefaultPath)
+      }
+    }
   })
 
 
@@ -96,7 +107,7 @@ export default function LoginPage() {
                 <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
               </Button>
 
-              <Button fullWidth size="large" color="inherit" variant="outlined">
+              <Button fullWidth size="large" color="inherit" variant="outlined" onClick={() => logout()}>
                 <Iconify icon="eva:facebook-fill" color="#1877F2" width={22} height={22} />
               </Button>
 

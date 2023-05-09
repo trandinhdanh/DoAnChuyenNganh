@@ -1,67 +1,40 @@
-import { Button, Container, TextField, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { Button, Stack, TextField } from '@mui/material';
 import { format } from 'date-fns';
 import axios from 'axios';
-import { useNavigate, useParams } from 'react-router-dom';
-import teacherApi from '../services/TeacherAPI';
+import studentApi from '../../services/StudentAPI';
 
 // import { TextField, Button } from '@material-ui/core';
 
-export default function UpdateTeacher() {
-  const navigate = useNavigate();
-  const { id } = useParams(); // Standardized variable name
+export default function NewStudent() {
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState('');
-  const [position, setPosition] = useState('');
-  const [teacher, setTeacher] = useState({}); // Renamed teacherUpdate to teacher
-
-  useEffect(() => {
-    teacherApi.getById(id)
-      .then((res) => {
-        setTeacher(res); // Renamed setTeacherUpdate to setTeacher
-        setName(res.fullName);
-        setGender(res.gender);
-        setBirthday(res.birthday);
-        setPosition(res.position);
-      })
-      .catch((err) => {
-        console.error(err);
-      });
-  }, [id]); // Added id to dependency array
-
+  const navigate = useNavigate();
   const handleSubmit = async (e) => {
     e.preventDefault();
-    const newDate = format(new Date(birthday), 'MM/dd/yyyy');
+    const newDate = format(new Date(birthday), 'MM/dd/yyyy')
+    console.log(name, gender, newDate)
     const formData = new FormData();
     formData.append('fullName', name);
     formData.append('gender', gender);
     formData.append('birthday', newDate);
-    formData.append('position', position);
-
     setName('');
     setGender('');
     setBirthday('');
-    setPosition('');
-
     try {
-      const response = await axios.put(`http://localhost:8027/teacher/${id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-
+      const response = await studentApi.create(formData);
       console.log(response.data);
     } catch (error) {
-      console.error(error);
+      console.error("error create student", error);
     }
-
-    navigate("/dashboard/teacher");
+    navigate("/dashboard/student");
   };
 
   return (
-    <Container>
-      <h1>Update Teacher</h1>
+    <>
+      <h1>Add Student</h1>
       <form onSubmit={handleSubmit}>
         <TextField
           label="Name"
@@ -94,19 +67,11 @@ export default function UpdateTeacher() {
             shrink: true,
           }}
         />
-        <TextField
-          label="Position"
-          variant="outlined"
-          value={position}
-          onChange={(e) => setPosition(e.target.value)}
-          margin="normal"
-          fullWidth
-          required
-        />
+
         <Button type="submit" variant="contained" color="primary">
-          Update Teacher
+          Add Student
         </Button>
       </form>
-    </Container>
+    </>
   );
 }
