@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -9,6 +11,7 @@ import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
 import { LoginForm } from '../sections/auth/login';
+import { useAuth } from '../context/AuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +45,16 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 export default function LoginPage() {
   const mdUp = useResponsive('up', 'md');
+
+  const {user} = useAuth();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+      if (user) {
+          navigate("/dashboard/app")
+      }
+  })
+
 
   return (
     <>

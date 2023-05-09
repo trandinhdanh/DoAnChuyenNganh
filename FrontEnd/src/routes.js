@@ -1,10 +1,12 @@
+import React from 'react';
 import { Navigate, useRoutes } from 'react-router-dom';
+
 // layouts
 import DashboardLayout from './layouts/dashboard';
 import SimpleLayout from './layouts/simple';
 //
 import BlogPage from './pages/BlogPage';
-import UserPage from './pages/UserPage';
+import TeacherPage from './pages/TeacherPage';
 import LoginPage from './pages/LoginPage';
 import Page404 from './pages/Page404';
 import ProductsPage from './pages/ProductsPage';
@@ -14,18 +16,53 @@ import StudentPage from './pages/StudentPage';
 import NewStudent from './pages/NewStudent';
 import UpdateTeacher from './pages/UpdateTeacher';
 import UpdateStudent from './pages/UpdateStudent';
+import ProtectedRoute from './shared/ProtectedRoute';
 
-// ----------------------------------------------------------------------
+
+// // ----------------------------------------------------------------------
+
 
 export default function Router() {
   const routes = useRoutes([
     {
-      path: '/dashboard',
-      element: <DashboardLayout />,
+      element: <LoginPage />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
+        // { path: '/' },
+        { path: 'login' },
+      ],
+    },
+    // {
+    //   path: 'dashboard',
+    //   element: (
+    //     <ProtectedRoute
+    //       element={<DashboardLayout />}
+    //       children={[
+    //         { element: <Navigate to="/dashboard/app" />, index: true },
+    //         { path: 'app', element: <DashboardAppPage /> },
+    //         { path: 'teacher', element: <UserPage /> },
+    //         { path: 'student', element: <StudentPage /> },
+    //         { path: 'teacherNew', element: <NewTeacher /> },
+    //         { path: 'teacherUpdate/:id', element: <UpdateTeacher /> },
+    //         { path: 'studentUpdate/:id', element: <UpdateStudent /> },
+    //         { path: 'studentNew', element: <NewStudent /> },
+    //         { path: 'products', element: <ProductsPage /> },
+    //         { path: 'blog', element: <BlogPage /> },
+    //       ]}
+    //     />
+    //   ),
+    // },
+    {
+      path: 'dashboard',
+      element:  (
+        <ProtectedRoute>
+          <DashboardLayout>
+            <Navigate to="/dashboard/app" replace />
+          </DashboardLayout>
+        </ProtectedRoute>
+      ),
+      children: [
         { path: 'app', element: <DashboardAppPage /> },
-        { path: 'teacher', element: <UserPage /> },
+        { path: 'teacher', element: <TeacherPage /> },
         { path: 'student', element: <StudentPage /> },
         { path: 'teacherNew', element: <NewTeacher /> },
         { path: 'teacherUpdate/:id', element: <UpdateTeacher /> },
@@ -36,15 +73,10 @@ export default function Router() {
       ],
     },
     {
-      path: 'login',
-      element: <LoginPage />,
-    },
-    {
       element: <SimpleLayout />,
       children: [
-        { element: <Navigate to="/dashboard/app" />, index: true },
         { path: '404', element: <Page404 /> },
-        { path: '*', element: <Navigate to="/404" /> },
+        { path: '*', element: <Navigate to="/404" replace /> },
       ],
     },
     {

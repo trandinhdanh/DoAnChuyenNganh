@@ -1,17 +1,16 @@
 package com.techpower.exammanagement.service.impl;
 
-import com.techpower.exammanagement.constant.RoleConstant;
-import com.techpower.exammanagement.constant.UserConstant;
+import com.techpower.exammanagement.constant.Status;
 import com.techpower.exammanagement.converter.StudentConverter;
 import com.techpower.exammanagement.dto.StudentDTO;
-import com.techpower.exammanagement.entity.RoleEntity;
+import com.techpower.exammanagement.constant.Role;
 import com.techpower.exammanagement.entity.StudentEntity;
-import com.techpower.exammanagement.entity.UserEntity;
-import com.techpower.exammanagement.repository.RoleRepository;
+import com.techpower.exammanagement.entity.User;
 import com.techpower.exammanagement.repository.StudentRepository;
 import com.techpower.exammanagement.repository.UserRepository;
 import com.techpower.exammanagement.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -26,8 +25,7 @@ public class StudentService implements IStudentService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
-    private RoleRepository roleRepository;
-
+    private PasswordEncoder passwordEncoder;
     @Override
     public List<StudentDTO> getAll() {
         List<StudentDTO> result = new ArrayList<>();
@@ -46,8 +44,8 @@ public class StudentService implements IStudentService {
     public StudentDTO save(StudentDTO dto) {
         StudentEntity entity = studentConverter.toEntity(dto);
 
-        UserEntity userEntity = new UserEntity();
-        userEntity.setUserName(dto.getFullName().replaceAll("\\s+", "").toLowerCase());
+        User user = new User();
+        user.setUserName(dto.getFullName().replaceAll("\\s+", "").toLowerCase());
         StringBuilder password = new StringBuilder();
         if (dto.getBirthday().getDate() > 9) {
             password.append(dto.getBirthday().getDate());
@@ -62,15 +60,13 @@ public class StudentService implements IStudentService {
             password.append(dto.getBirthday().getMonth() + 1);
         }
         password.append((dto.getBirthday().getYear() + 1900));
-        userEntity.setPassword(password.toString());
-        userEntity.setStatus(UserConstant.ACTIVE);
+        user.setPassword(passwordEncoder.encode(password.toString()));
+        user.setStatus(Status.ACTIVE);
+        user.setRole(Role.STUDENT);
 
-        List<RoleEntity> roleEntities = new ArrayList<>();
-        roleEntities.add(roleRepository.findOneByName(RoleConstant.STUDENT));
-        userEntity.setRoles(roleEntities);
-        userRepository.save(userEntity);
+        userRepository.save(user);
 
-        entity.setUser(userEntity);
+        entity.setUser(user);
         studentRepository.save(entity);
         return studentConverter.toDTO(entity);
     }
