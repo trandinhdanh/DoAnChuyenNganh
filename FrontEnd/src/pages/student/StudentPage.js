@@ -31,6 +31,7 @@ import Scrollbar from '../../components/scrollbar';
 import { UserListToolbar } from '../../sections/@dashboard/user';
 // mock
 import studentApi from '../../services/StudentAPI';
+import { fDate } from '../../utils/formatTime';
 
 
 // ----------------------------------------------------------------------
@@ -175,7 +176,7 @@ export default function StudentPage() {
 
                       <TableCell align="right">{row.id}</TableCell>
                       <TableCell align="right">{row.fullName}</TableCell>
-                      <TableCell align="right">{row.birthday}</TableCell>
+                      <TableCell align="right">{fDate(row.birthday)}</TableCell>
                       <TableCell align="right" onClick={() => { console.log("delete") }}>
 
                       <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, row.id)}>
