@@ -26,9 +26,9 @@ public class ExamController {
         return iExamService.getDetail(id);
     }
 
-    @PostMapping("/exam")
-    public ExamDTO save(@RequestBody ExamDTO dto) {
-        return iExamService.save(dto);
+    @PostMapping("/exam/{id}")
+    public ExamDTO save(@PathVariable long id, @RequestBody ExamDTO dto) {
+        return iExamService.save(dto, id);
     }
 
     @PutMapping("/exam/{id}")

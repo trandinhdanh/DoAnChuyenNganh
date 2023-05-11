@@ -19,4 +19,7 @@ public class ExamEntity {
     private String question;
     @OneToMany(mappedBy = "exam")
     private List<AnswerEntity> answer = new ArrayList<>();
+    @ManyToOne
+    @JoinColumn(name = "course_id")
+    private CourseEntity course;
 }
