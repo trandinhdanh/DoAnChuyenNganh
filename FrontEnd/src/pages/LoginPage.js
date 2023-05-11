@@ -1,3 +1,5 @@
+import { useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Helmet } from 'react-helmet-async';
 // @mui
 import { styled } from '@mui/material/styles';
@@ -9,6 +11,7 @@ import Logo from '../components/logo';
 import Iconify from '../components/iconify';
 // sections
 import { LoginForm } from '../sections/auth/login';
+import { useAuth } from '../context/AuthContext';
 
 // ----------------------------------------------------------------------
 
@@ -42,6 +45,27 @@ const StyledContent = styled('div')(({ theme }) => ({
 
 export default function LoginPage() {
   const mdUp = useResponsive('up', 'md');
+
+  const { user, getScopes, logout } = useAuth();
+  const navigate = useNavigate();
+  const adminDefaultPath = "/dashboard/app";
+  const teacherDefaultPath = "/dashboard/student";
+  const studentDefaultPath = "/dashboard/blog";
+
+  useEffect(() => {
+    if (user) {
+      if (getScopes().includes("ADMIN")) {
+        navigate(adminDefaultPath)
+      }
+      else if (getScopes().includes("TEACHER")) {
+        navigate(teacherDefaultPath)
+      }
+      else if (getScopes().includes("STUDENT")) {
+        navigate(studentDefaultPath)
+      }
+    }
+  })
+
 
   return (
     <>
@@ -83,7 +107,7 @@ export default function LoginPage() {
                 <Iconify icon="eva:google-fill" color="#DF3E30" width={22} height={22} />
               </Button>
 
-              <Button fullWidth size="large" color="inherit" variant="outlined">
+              <Button fullWidth size="large" color="inherit" variant="outlined" onClick={() => logout()}>
                 <Iconify icon="eva:facebook-fill" color="#1877F2" width={22} height={22} />
               </Button>
 

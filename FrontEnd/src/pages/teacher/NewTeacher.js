@@ -1,29 +1,20 @@
-import { Button, TextField, Typography } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Helmet } from 'react-helmet-async';
+import { Button, Container, TextField } from '@mui/material';
+import React, {  useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { format } from 'date-fns';
-import axios from 'axios';
-import { useParams } from 'react-router-dom';
-import teacherApi from '../services/TeacherAPI';
+import teacherApi from '../../services/TeacherAPI';
+
 
 // import { TextField, Button } from '@material-ui/core';
 
-export default function UpdateTeacher() {
-  const {id} = useParams();
+export default function AddTeacherForm() {
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState('');
   const [position, setPosition] = useState('');
-  const [teacherUpdate, setTeacherUpdate] = useState({});
-  
-  useEffect(() => { 
-    console.log(id);
-    teacherApi.getById(id).then((res) => {
-      setTeacherUpdate(res.data)
-          })
-          .catch((err) => {
-            console.log(err);
-          });
-   },[id, teacherUpdate])
+  const navigate = useNavigate();
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newDate =  format(new Date(birthday), 'MM/dd/yyyy')
@@ -38,24 +29,30 @@ export default function UpdateTeacher() {
     setBirthday('');
     setPosition('');
     
-    const response = await axios.put(`http://localhost:8027/teacher/${id}`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
     
-    console.log(response.data);
+    try {
+      const response = await teacherApi.create(formData);
+      console.log(response.data);
+    } catch (error) {
+      console.error("error create teacher",error);
+    }
+    navigate("/dashboard/teacher");
   };
 
   return (
-   <> 
-        <h1>Update Teacher</h1>
+   <>
+<Helmet>
+        <title> Create teacher</title>
+      </Helmet>
+   <Container>
+
+   
+        <h1>Add Teacher</h1>
         <form onSubmit={handleSubmit}>
-         
       <TextField
         label="Name"
         variant="outlined"
-        value={teacherUpdate.fullName || ""}
+        value={name}
         onChange={(e) => setName(e.target.value)}
         margin="normal"
         fullWidth
@@ -93,9 +90,10 @@ export default function UpdateTeacher() {
         required
       />
       <Button type="submit" variant="contained" color="primary">
-        Update Teacher
+        Add Teacher
       </Button>
     </form>
+    </Container>
    </>
   );
 }

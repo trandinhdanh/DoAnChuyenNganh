@@ -1,5 +1,5 @@
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { useLocation } from 'react-router-dom';
 // @mui
 import { styled, alpha } from '@mui/material/styles';
@@ -13,7 +13,9 @@ import Logo from '../../../components/logo';
 import Scrollbar from '../../../components/scrollbar';
 import NavSection from '../../../components/nav-section';
 //
-import navConfig from './config';
+import { navConfigAdmin, navConfigTeacher, navConfigStudent } from './config';
+import { useAuth } from '../../../context/AuthContext';
+
 
 // ----------------------------------------------------------------------
 
@@ -38,10 +40,22 @@ export default function Nav({ openNav, onCloseNav }) {
   const { pathname } = useLocation();
 
   const isDesktop = useResponsive('up', 'lg');
+  const [navConfig, setNavConfig] = useState([]);
 
+  const { getScopes } = useAuth();
+
+  // const scopes = getScopes();
   useEffect(() => {
     if (openNav) {
       onCloseNav();
+    }
+    if (getScopes().includes("ADMIN")) {
+      setNavConfig(navConfigAdmin);
+    } else if (getScopes().includes("TEACHER")) {
+      setNavConfig(navConfigTeacher);
+    }
+    else if (getScopes().includes("STUDENT")) {
+      setNavConfig(navConfigStudent);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
@@ -79,7 +93,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
       <Box sx={{ flexGrow: 1 }} />
 
-      <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
+      {/* <Box sx={{ px: 2.5, pb: 3, mt: 10 }}>
         <Stack alignItems="center" spacing={3} sx={{ pt: 5, borderRadius: 2, position: 'relative' }}>
           <Box
             component="img"
@@ -101,7 +115,7 @@ export default function Nav({ openNav, onCloseNav }) {
             Upgrade to Pro
           </Button>
         </Stack>
-      </Box>
+      </Box> */}
     </Scrollbar>
   );
 

@@ -1,43 +1,55 @@
 import { Button, TextField } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { format } from 'date-fns';
-import axios from 'axios';
-import teacherApi from '../services/TeacherAPI';
+import { useNavigate, useParams } from 'react-router-dom';
+import studentApi from '../../services/StudentAPI';
 
-// import { TextField, Button } from '@material-ui/core';
-
-export default function AddTeacherForm() {
+export default function UpdateStudent() {
+  const {id} = useParams();
   const [name, setName] = useState('');
   const [gender, setGender] = useState('');
   const [birthday, setBirthday] = useState('');
-  const [position, setPosition] = useState('');
-  
+  const [studentUpdate, setStudentUpdate] = useState({});
+  const navigate = useNavigate();
+
+  useEffect(() => { 
+    console.log(id);
+    studentApi.getById(id).then((res) => {
+      console.log(res);
+      setStudentUpdate(res);
+
+      setName(res.fullName);
+      setGender(res.gender);
+      setBirthday(res.birthday);
+          })
+          .catch((err) => {
+            console.log(err);
+          });
+   },[])
   const handleSubmit = async (e) => {
     e.preventDefault();
     const newDate =  format(new Date(birthday), 'MM/dd/yyyy')
-    console.log(name , gender , newDate , position)
+    console.log(name , gender , newDate )
     const formData = new FormData();
     formData.append('fullName', name);
     formData.append('gender', gender);
     formData.append('birthday', newDate);
-    formData.append('position', position);
     setName('');
     setGender('');
     setBirthday('');
-    setPosition('');
-    
-    const response = await axios.post(`http://localhost:8027/teacher`, formData, {
-      headers: {
-        'Content-Type': 'multipart/form-data',
-      },
-    });
-    
+    try{
+    const response = await studentApi.update(id, formData);
     console.log(response.data);
+  } catch (error) {
+    console.error(error);
+  }
+
+  navigate("/dashboard/teacher");
   };
 
   return (
    <>
-        <h1>Add Teacher</h1>
+        <h1>Update Student</h1>
         <form onSubmit={handleSubmit}>
       <TextField
         label="Name"
@@ -70,17 +82,9 @@ export default function AddTeacherForm() {
           shrink: true,
         }}
       />
-      <TextField
-        label="Position"
-        variant="outlined"
-        value={position}
-        onChange={(e) => setPosition(e.target.value)}
-        margin="normal"
-        fullWidth
-        required
-      />
+      
       <Button type="submit" variant="contained" color="primary">
-        Add Teacher
+        Update Student
       </Button>
     </form>
    </>

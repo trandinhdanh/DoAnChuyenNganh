@@ -1,5 +1,6 @@
 package com.techpower.exammanagement.controller;
 
+import com.techpower.exammanagement.constant.Gender;
 import com.techpower.exammanagement.dto.TeacherDTO;
 import com.techpower.exammanagement.service.ITeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,6 +14,7 @@ import java.util.Map;
 
 @RestController
 @CrossOrigin(origins = "*")
+@RequestMapping("/api/v1")
 public class TeacherController {
     @Autowired
     private ITeacherService iTeacherService;
@@ -29,7 +31,7 @@ public class TeacherController {
 
     @PostMapping("/teacher")
     public TeacherDTO save(@RequestParam("fullName") String fullName,
-                           @RequestParam("gender") String gender,
+                           @RequestParam("gender") Gender gender,
                            @RequestParam("birthday") Date birthday,
                            @RequestParam("position") String position) {
         //format mm/dd/yyyy
@@ -44,7 +46,7 @@ public class TeacherController {
     @PutMapping("/teacher/{id}")
     public TeacherDTO updateProduct(@PathVariable("id") long id,
                                     @RequestParam("fullName") String fullName,
-                                    @RequestParam("gender") String gender,
+                                    @RequestParam("gender") Gender gender,
                                     @RequestParam("birthday") Date birthday,
                                     @RequestParam("position") String position) {
         TeacherDTO dto = new TeacherDTO();

@@ -1,9 +1,10 @@
 package com.techpower.exammanagement.dto;
 
+import com.techpower.exammanagement.constant.Gender;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.Column;
+import jakarta.persistence.Column;
 import java.util.Date;
 
 @Getter
@@ -13,7 +14,7 @@ public class StudentDTO {
 
     private String fullName;
 
-    private String gender;
+    private Gender gender;
 
     private Date birthday;
 }

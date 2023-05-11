@@ -1,9 +1,10 @@
 package com.techpower.exammanagement.entity;
 
+import com.techpower.exammanagement.constant.Gender;
 import lombok.Getter;
 import lombok.Setter;
 
-import javax.persistence.*;
+import jakarta.persistence.*;
 import java.util.Date;
 
 @Entity
@@ -16,11 +17,13 @@ public class StudentEntity {
     private Long id;
     @Column
     private String fullName;
-    @Column
-    private String gender;
+
+    @Enumerated(EnumType.STRING)
+    private Gender gender;
+
     @Column
     private Date birthday;
     @OneToOne
     @JoinColumn(name = "user_id")
-    private UserEntity user;
+    private User user;
 }
