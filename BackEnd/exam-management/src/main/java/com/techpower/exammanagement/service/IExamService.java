@@ -9,5 +9,5 @@ public interface IExamService {
     ExamDTO save(ExamDTO dto);
     ExamDTO update(ExamDTO student);
 
-    void remove(long id);
+    void remove(long[] ids);
 }

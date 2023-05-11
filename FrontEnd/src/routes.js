@@ -25,7 +25,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/app" />, index: true },
         { path: 'app', element: <DashboardAppPage /> },
-        { path: 'teacher', element: <UserPage /> },
+        { path: 'user', element: <UserPage /> },
         { path: 'student', element: <StudentPage /> },
         { path: 'teacherNew', element: <NewTeacher /> },
         { path: 'teacherUpdate/:id', element: <UpdateTeacher /> },
