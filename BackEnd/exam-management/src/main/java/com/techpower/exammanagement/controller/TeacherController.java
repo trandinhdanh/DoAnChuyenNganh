@@ -1,7 +1,5 @@
 package com.techpower.exammanagement.controller;
 
-import com.techpower.exammanagement.auth.AuthenticationResponse;
-import com.techpower.exammanagement.dto.StudentDTO;
 import com.techpower.exammanagement.dto.TeacherDTO;
 import com.techpower.exammanagement.service.ITeacherService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,23 +27,18 @@ public class TeacherController {
         return iTeacherService.getDetail(id);
     }
 
-    @GetMapping("/teacher")
-    public List<TeacherDTO> filterFullName(@RequestParam("search") String fullName) {
-        return iTeacherService.filterFullName(fullName);
-    }
-
     @PostMapping("/teacher")
-    public ResponseEntity<AuthenticationResponse> save(@RequestParam("fullName") String fullName,
-                                                       @RequestParam("gender") String gender,
-                                                       @RequestParam("birthday") Date birthday,
-                                                       @RequestParam("position") String position) {
+    public TeacherDTO save(@RequestParam("fullName") String fullName,
+                           @RequestParam("gender") String gender,
+                           @RequestParam("birthday") Date birthday,
+                           @RequestParam("position") String position) {
         //format mm/dd/yyyy
         TeacherDTO dto = new TeacherDTO();
         dto.setFullName(fullName);
         dto.setGender(gender);
         dto.setBirthday(birthday);
         dto.setPosition(position);
-        return ResponseEntity.ok(iTeacherService.save(dto));
+        return iTeacherService.save(dto);
     }
 
     @PutMapping("/teacher/{id}")
