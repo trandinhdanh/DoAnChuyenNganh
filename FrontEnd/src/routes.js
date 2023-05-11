@@ -17,6 +17,8 @@ import NewStudent from './pages/student/NewStudent';
 import UpdateTeacher from './pages/teacher/UpdateTeacher';
 import UpdateStudent from './pages/student/UpdateStudent';
 import ProtectedRoute from './shared/ProtectedRoute';
+import ExamPage from './pages/exam/ExamPage';
+import CoursePage from './pages/course/CoursePage';
 
 
 
@@ -71,6 +73,8 @@ export default function Router() {
         { path: "student", element: <StudentPage /> },
         { path: "studentUpdate/:id", element: <UpdateStudent /> },
         { path: "studentNew", element: <NewStudent /> },
+        { path: "exam", element: <ExamPage /> },
+        { path: "course", element: <CoursePage /> },
       ],
     },
     

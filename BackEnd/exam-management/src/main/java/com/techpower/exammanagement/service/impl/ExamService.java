@@ -7,6 +7,7 @@ import com.techpower.exammanagement.dto.ExamDTO;
 import com.techpower.exammanagement.entity.AnswerEntity;
 import com.techpower.exammanagement.entity.ExamEntity;
 import com.techpower.exammanagement.repository.AnswerRepository;
+import com.techpower.exammanagement.repository.CourseRepository;
 import com.techpower.exammanagement.repository.ExamRepository;
 import com.techpower.exammanagement.service.IExamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,6 +23,8 @@ public class ExamService implements IExamService {
     private AnswerRepository answerRepository;
     @Autowired
     private ExamRepository examRepository;
+    @Autowired
+    private CourseRepository courseRepository;
     @Autowired
     private AnswerConverter answerConverter;
     @Autowired
@@ -58,8 +61,9 @@ public class ExamService implements IExamService {
     }
 
     @Override
-    public ExamDTO save(ExamDTO dto) {
+    public ExamDTO save(ExamDTO dto, long idCourse) {
         ExamEntity entity = examConverter.toEntity(dto);
+        entity.setCourse(courseRepository.findOneById(idCourse));
         examRepository.save(entity);
 
         List<AnswerEntity> answerEntityList = new ArrayList<>();

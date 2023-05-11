@@ -29,7 +29,16 @@ const navConfigTeacher = [
   path: '/dashboard/student',
   icon: icon('ic_user'),
 },
-
+{
+  title: 'Course',
+  path: '/dashboard/course',
+  icon: icon('ic_user'),
+},
+{
+  title: 'Exam',
+  path: '/dashboard/exam',
+  icon: icon('ic_user'),
+},
  ];
 
 
