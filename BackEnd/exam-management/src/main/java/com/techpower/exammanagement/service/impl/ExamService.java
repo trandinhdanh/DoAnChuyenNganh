@@ -1,14 +1,14 @@
 package com.techpower.exammanagement.service.impl;
 
-import com.techpower.exammanagement.converter.AnswerConverter;
 import com.techpower.exammanagement.converter.ExamConverter;
-import com.techpower.exammanagement.dto.AnswerDTO;
 import com.techpower.exammanagement.dto.ExamDTO;
-import com.techpower.exammanagement.entity.AnswerEntity;
+import com.techpower.exammanagement.entity.CourseEntity;
 import com.techpower.exammanagement.entity.ExamEntity;
+import com.techpower.exammanagement.entity.QuestionEntity;
 import com.techpower.exammanagement.repository.AnswerRepository;
 import com.techpower.exammanagement.repository.CourseRepository;
 import com.techpower.exammanagement.repository.ExamRepository;
+import com.techpower.exammanagement.repository.QuestionRepository;
 import com.techpower.exammanagement.service.IExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -20,100 +20,54 @@ import java.util.List;
 @Service
 public class ExamService implements IExamService {
     @Autowired
-    private AnswerRepository answerRepository;
-    @Autowired
     private ExamRepository examRepository;
+    @Autowired
+    private ExamConverter examConverter;
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
-    private AnswerConverter answerConverter;
+    private QuestionRepository questionRepository;
     @Autowired
-    private ExamConverter examConverter;
+    private AnswerRepository answerRepository;
 
     @Override
     public List<ExamDTO> getAll() {
         List<ExamDTO> result = new ArrayList<>();
         for (ExamEntity entity : examRepository.findAll()) {
-            List<AnswerEntity> answerEntities = answerRepository.findAllByExam(entity);
-            List<AnswerDTO> answerDTOS = new ArrayList<>();
-            for (AnswerEntity answer : answerEntities) {
-                answerDTOS.add(answerConverter.toDTO(answer));
-            }
-            ExamDTO examDTO = examConverter.toDTO(entity);
-            examDTO.setAnswers(answerDTOS);
-            result.add(examDTO);
+            result.add(examConverter.toDTO(entity));
         }
         return result;
     }
 
     @Override
     public ExamDTO getDetail(long id) {
-        ExamEntity examEntity = examRepository.findOneById(id);
-
-        List<AnswerEntity> answerEntities = answerRepository.findAllByExam(examEntity);
-        List<AnswerDTO> answerDTOS = new ArrayList<>();
-        for (AnswerEntity answer : answerEntities) {
-            answerDTOS.add(answerConverter.toDTO(answer));
-        }
-        ExamDTO result = examConverter.toDTO(examEntity);
-        result.setAnswers(answerDTOS);
-        return result;
+        return examConverter.toDTO(examRepository.findOneById(id));
     }
 
     @Override
     public ExamDTO save(ExamDTO dto, long idCourse) {
-        ExamEntity entity = examConverter.toEntity(dto);
-        entity.setCourse(courseRepository.findOneById(idCourse));
-        examRepository.save(entity);
-
-        List<AnswerEntity> answerEntityList = new ArrayList<>();
-        for (AnswerDTO answerDTO : dto.getAnswers()) {
-            AnswerEntity answerEntity = answerConverter.toEntity(answerDTO);
-            answerEntity.setExam(entity);
-            answerRepository.save(answerEntity);
-            answerEntityList.add(answerEntity);
-        }
-        entity.setAnswer(answerEntityList);
-        examRepository.save(entity);
-
-        ExamDTO result = examConverter.toDTO(entity);
-        List<AnswerDTO> answerDTOList = new ArrayList<>();
-        for (AnswerEntity answerEntity : entity.getAnswer()) {
-            answerDTOList.add(answerConverter.toDTO(answerEntity));
-        }
-        result.setAnswers(answerDTOList);
-        return result;
+        ExamEntity examEntity = examConverter.toEntity(dto);
+        CourseEntity course = courseRepository.findOneById(idCourse);
+        examEntity.setCourse(course);
+        return examConverter.toDTO(examRepository.save(examEntity));
     }
 
     @Override
-    public ExamDTO update(ExamDTO exam) {
-        ExamEntity examEntityOld = examRepository.findOneById(exam.getId());
-        List<AnswerEntity> answerEntityOlds = answerRepository.findAllByExam(examRepository.findOneById(exam.getId()));
-        ExamEntity examEntityNew = examConverter.toEntity(exam, examEntityOld);
-        examRepository.save(examEntityNew);
-        List<AnswerDTO> answerResult = new ArrayList<>();
-        List<AnswerDTO> answerDTONews = exam.getAnswers();
-        for (AnswerDTO answerDTONew : answerDTONews) {
-            for (AnswerEntity answerEntityOld : answerEntityOlds) {
-                if (answerDTONews.indexOf(answerDTONew) == answerEntityOlds.indexOf(answerEntityOld)) {
-                    AnswerEntity answerEntityNew = answerConverter.toEntity(answerDTONew, answerEntityOld);
-                    answerEntityNew.setId(answerEntityOld.getId());
-                    answerRepository.save(answerEntityNew);
-                    answerResult.add(answerConverter.toDTO(answerEntityNew));
-                }
-            }
-        }
-        ExamDTO result = examConverter.toDTO(examEntityNew);
-        result.setAnswers(answerResult);
-        return result;
+    public ExamDTO update(ExamDTO dto) {
+        ExamEntity examEntityOld = examRepository.findOneById(dto.getId());
+        ExamEntity examEntityNew = examConverter.toEntity(dto, examEntityOld);
+        return examConverter.toDTO(examRepository.save(examEntityNew));
     }
 
     @Override
     @Transactional
     public void remove(long id) {
         if (examRepository.findOneById(id) != null) {
-            ExamEntity examEntity = examRepository.findOneById(id);
-            answerRepository.deleteAllByExam(examEntity);
+            ExamEntity exam = examRepository.findOneById(id);
+            for (QuestionEntity questionEntity : questionRepository.findAllByExam(exam)) {
+                answerRepository.deleteAllByQuestion(questionEntity);
+            }
+            questionRepository.deleteAllByExam(exam);
             examRepository.deleteById(id);
         }
     }

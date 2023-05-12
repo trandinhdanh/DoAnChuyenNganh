@@ -19,6 +19,6 @@ public class AnswerEntity {
     @Column
     private boolean correctAnswer;
     @ManyToOne
-    @JoinColumn(name = "exam_id")
-    private ExamEntity exam;
+    @JoinColumn(name = "question_id")
+    private QuestionEntity question;
 }

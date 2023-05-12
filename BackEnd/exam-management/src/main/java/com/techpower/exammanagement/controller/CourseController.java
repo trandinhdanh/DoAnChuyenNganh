@@ -1,7 +1,7 @@
 package com.techpower.exammanagement.controller;
 
 import com.techpower.exammanagement.dto.CourseDTO;
-import com.techpower.exammanagement.dto.ExamDTO;
+import com.techpower.exammanagement.dto.StudentDTO;
 import com.techpower.exammanagement.service.ICourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -26,9 +26,14 @@ public class CourseController {
         return iCourseService.getDetail(id);
     }
 
-    @PostMapping("/course")
-    public CourseDTO save(@RequestBody CourseDTO dto) {
-        return iCourseService.save(dto);
+    @PostMapping("/course/{idUser}")
+    public CourseDTO save(@RequestBody CourseDTO dto, @PathVariable long idUser) {
+        return iCourseService.save(dto, idUser);
+    }
+
+    @PostMapping("/course/{idCourse}/{idUser}")
+    public CourseDTO addStudentToCourse(@PathVariable long idCourse, @PathVariable long idUser) {
+        return iCourseService.addStudentToCourse(idCourse, idUser);
     }
 
     @PutMapping("/course/{id}")

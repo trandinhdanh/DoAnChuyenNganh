@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.Column;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter

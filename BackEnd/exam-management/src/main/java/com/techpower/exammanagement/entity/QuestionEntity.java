@@ -1,26 +1,25 @@
 package com.techpower.exammanagement.entity;
 
-import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import jakarta.persistence.*;
 import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "exam")
+@Table(name = "question")
 @Getter
 @Setter
-public class ExamEntity {
+public class QuestionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
-    private String name;
+    private String question;
+    @OneToMany(mappedBy = "question")
+    private List<AnswerEntity> answer = new ArrayList<>();
     @ManyToOne
-    @JoinColumn(name = "course_id")
-    private CourseEntity course;
-    @OneToMany(mappedBy = "exam")
-    private List<QuestionEntity> questions = new ArrayList<>();
-
+    @JoinColumn(name = "exam_id")
+    private ExamEntity exam;
 }

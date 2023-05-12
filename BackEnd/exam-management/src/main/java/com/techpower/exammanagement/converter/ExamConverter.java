@@ -9,18 +9,18 @@ public class ExamConverter {
     public ExamDTO toDTO(ExamEntity entity) {
         ExamDTO dto = new ExamDTO();
         dto.setId(entity.getId());
-        dto.setQuestion(entity.getQuestion());
+        dto.setName(entity.getName());
         return dto;
     }
 
     public ExamEntity toEntity(ExamDTO dto) {
         ExamEntity entity = new ExamEntity();
-        entity.setQuestion(dto.getQuestion());
+        entity.setName(dto.getName());
         return entity;
     }
 
     public ExamEntity toEntity(ExamDTO dto, ExamEntity entity) {
-        entity.setQuestion(dto.getQuestion());
+        entity.setName(dto.getName());
         return entity;
     }
 }
