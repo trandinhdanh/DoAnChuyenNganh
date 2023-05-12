@@ -8,27 +8,27 @@ const getAuthConfig = () => ({
   }
 });
 
-const courseAPI = {
+const examAPI = {
   getAll: async () => {
-    const response = await axios.get(`${BASE_URL}/api/v1/course/list`, getAuthConfig());
+    const response = await axios.get(`${BASE_URL}/api/v1/exam/list`, getAuthConfig());
     console.log(response.data)
     return response.data;
   },
 
   getById: async (id) => {
-    const response = await axios.get(`${BASE_URL}/api/v1/course/${id}`, getAuthConfig());
+    const response = await axios.get(`${BASE_URL}/api/v1/student/${id}`, getAuthConfig());
     return response.data;
   },
 
   create: async (course,id) => {
-    const response = await axios.post(`${BASE_URL}/api/v1/course/${id}`, course,  {
+    const response = await axios.post(`${BASE_URL}/api/v1/exam/${id}`, course,  {
       ...getAuthConfig(),
       'Content-Type': 'multipart/form-data'
 });
     return response.data;
   },
   update: async (id, course) => {
-    const response = await axios.put(`${BASE_URL}/api/v1/course/${id}`, course,  {
+    const response = await axios.put(`${BASE_URL}/api/v1/exam/${id}`, course,  {
       ...getAuthConfig(),
       'Content-Type': 'multipart/form-data'
 });
@@ -41,4 +41,4 @@ const courseAPI = {
   }
 };
 
-export default courseAPI;
+export default examAPI;
