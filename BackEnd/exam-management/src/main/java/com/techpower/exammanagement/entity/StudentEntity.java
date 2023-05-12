@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "student")
@@ -26,4 +29,6 @@ public class StudentEntity {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @ManyToMany(mappedBy = "students")//mappedBy là cái tên danh sách role bên user
+    private List<CourseEntity> courses = new ArrayList<>();
 }

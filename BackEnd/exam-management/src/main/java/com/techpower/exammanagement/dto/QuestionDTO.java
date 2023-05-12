@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class ExamDTO {
+public class QuestionDTO {
     private Long id;
     private String question;
     private List<AnswerDTO> answers;

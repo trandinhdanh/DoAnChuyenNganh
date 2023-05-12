@@ -5,7 +5,10 @@ import lombok.Getter;
 import lombok.Setter;
 
 import jakarta.persistence.*;
+
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "teacher")
@@ -28,6 +31,8 @@ public class TeacherEntity {
     @OneToOne
     @JoinColumn(name = "user_id")
     private User user;
+    @OneToMany(mappedBy = "teacher")
+    private List<CourseEntity> courses = new ArrayList<>();
 
     @Override
     public String toString() {

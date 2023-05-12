@@ -1,15 +1,16 @@
 package com.techpower.exammanagement.service.impl;
 
 import com.techpower.exammanagement.converter.AnswerConverter;
-import com.techpower.exammanagement.converter.ExamConverter;
+import com.techpower.exammanagement.converter.QuestionConverter;
 import com.techpower.exammanagement.dto.AnswerDTO;
-import com.techpower.exammanagement.dto.ExamDTO;
+import com.techpower.exammanagement.dto.QuestionDTO;
 import com.techpower.exammanagement.entity.AnswerEntity;
 import com.techpower.exammanagement.entity.QuestionEntity;
 import com.techpower.exammanagement.repository.AnswerRepository;
+import com.techpower.exammanagement.repository.QuestionRepository;
 import com.techpower.exammanagement.repository.CourseRepository;
 import com.techpower.exammanagement.repository.ExamRepository;
-import com.techpower.exammanagement.service.IExamService;
+import com.techpower.exammanagement.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -18,28 +19,30 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Service
-public class ExamService implements IExamService {
+public class QuestionService implements IQuestionService {
     @Autowired
-    private AnswerRepository answerRepository;
+    private QuestionRepository questionRepository;
     @Autowired
     private ExamRepository examRepository;
     @Autowired
     private CourseRepository courseRepository;
     @Autowired
+    private AnswerRepository answerRepository;
+    @Autowired
     private AnswerConverter answerConverter;
     @Autowired
-    private ExamConverter examConverter;
+    private QuestionConverter questionConverter;
 
     @Override
-    public List<ExamDTO> getAll() {
-        List<ExamDTO> result = new ArrayList<>();
-        for (QuestionEntity entity : examRepository.findAll()) {
-            List<AnswerEntity> answerEntities = answerRepository.findAllByExam(entity);
+    public List<QuestionDTO> getAll() {
+        List<QuestionDTO> result = new ArrayList<>();
+        for (QuestionEntity entity : questionRepository.findAll()) {
+            List<AnswerEntity> answerEntities = answerRepository.findAllByQuestion(entity);
             List<AnswerDTO> answerDTOS = new ArrayList<>();
             for (AnswerEntity answer : answerEntities) {
                 answerDTOS.add(answerConverter.toDTO(answer));
             }
-            ExamDTO examDTO = examConverter.toDTO(entity);
+            QuestionDTO examDTO = questionConverter.toDTO(entity);
             examDTO.setAnswers(answerDTOS);
             result.add(examDTO);
         }
@@ -47,36 +50,36 @@ public class ExamService implements IExamService {
     }
 
     @Override
-    public ExamDTO getDetail(long id) {
-        QuestionEntity examEntity = examRepository.findOneById(id);
+    public QuestionDTO getDetail(long id) {
+        QuestionEntity examEntity = questionRepository.findOneById(id);
 
-        List<AnswerEntity> answerEntities = answerRepository.findAllByExam(examEntity);
+        List<AnswerEntity> answerEntities = answerRepository.findAllByQuestion(examEntity);
         List<AnswerDTO> answerDTOS = new ArrayList<>();
         for (AnswerEntity answer : answerEntities) {
             answerDTOS.add(answerConverter.toDTO(answer));
         }
-        ExamDTO result = examConverter.toDTO(examEntity);
+        QuestionDTO result = questionConverter.toDTO(examEntity);
         result.setAnswers(answerDTOS);
         return result;
     }
 
     @Override
-    public ExamDTO save(ExamDTO dto, long idCourse) {
-        QuestionEntity entity = examConverter.toEntity(dto);
-        entity.setCourse(courseRepository.findOneById(idCourse));
-        examRepository.save(entity);
+    public QuestionDTO save(QuestionDTO dto, long idExam) {
+        QuestionEntity entity = questionConverter.toEntity(dto);
+        entity.setExam(examRepository.findOneById(idExam));
+        questionRepository.save(entity);
 
         List<AnswerEntity> answerEntityList = new ArrayList<>();
         for (AnswerDTO answerDTO : dto.getAnswers()) {
             AnswerEntity answerEntity = answerConverter.toEntity(answerDTO);
-            answerEntity.setExam(entity);
+            answerEntity.setQuestion(entity);
             answerRepository.save(answerEntity);
             answerEntityList.add(answerEntity);
         }
         entity.setAnswer(answerEntityList);
-        examRepository.save(entity);
+        questionRepository.save(entity);
 
-        ExamDTO result = examConverter.toDTO(entity);
+        QuestionDTO result = questionConverter.toDTO(entity);
         List<AnswerDTO> answerDTOList = new ArrayList<>();
         for (AnswerEntity answerEntity : entity.getAnswer()) {
             answerDTOList.add(answerConverter.toDTO(answerEntity));
@@ -86,13 +89,15 @@ public class ExamService implements IExamService {
     }
 
     @Override
-    public ExamDTO update(ExamDTO exam) {
-        QuestionEntity examEntityOld = examRepository.findOneById(exam.getId());
-        List<AnswerEntity> answerEntityOlds = answerRepository.findAllByExam(examRepository.findOneById(exam.getId()));
-        QuestionEntity examEntityNew = examConverter.toEntity(exam, examEntityOld);
-        examRepository.save(examEntityNew);
+    public QuestionDTO update(QuestionDTO dto) {
+        QuestionEntity questionEntityOld = questionRepository.findOneById(dto.getId());
+        List<AnswerEntity> answerEntityOlds = answerRepository.findAllByQuestion(questionEntityOld);
+
+        QuestionEntity questionEntityNew = questionConverter.toEntity(dto, questionEntityOld);
+        questionRepository.save(questionEntityNew);
+
         List<AnswerDTO> answerResult = new ArrayList<>();
-        List<AnswerDTO> answerDTONews = exam.getAnswers();
+        List<AnswerDTO> answerDTONews = dto.getAnswers();
         for (AnswerDTO answerDTONew : answerDTONews) {
             for (AnswerEntity answerEntityOld : answerEntityOlds) {
                 if (answerDTONews.indexOf(answerDTONew) == answerEntityOlds.indexOf(answerEntityOld)) {
@@ -103,7 +108,7 @@ public class ExamService implements IExamService {
                 }
             }
         }
-        ExamDTO result = examConverter.toDTO(examEntityNew);
+        QuestionDTO result = questionConverter.toDTO(questionEntityNew);
         result.setAnswers(answerResult);
         return result;
     }
@@ -111,10 +116,10 @@ public class ExamService implements IExamService {
     @Override
     @Transactional
     public void remove(long id) {
-        if (examRepository.findOneById(id) != null) {
-            QuestionEntity examEntity = examRepository.findOneById(id);
-            answerRepository.deleteAllByExam(examEntity);
-            examRepository.deleteById(id);
+        if (questionRepository.findOneById(id) != null) {
+            QuestionEntity questionEntity = questionRepository.findOneById(id);
+            answerRepository.deleteAllByQuestion(questionEntity);
+            questionRepository.deleteById(id);
         }
     }
 }

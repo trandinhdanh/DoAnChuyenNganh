@@ -1,10 +1,9 @@
 package com.techpower.exammanagement.controller;
 
-import com.techpower.exammanagement.dto.ExamDTO;
-import com.techpower.exammanagement.service.IExamService;
+import com.techpower.exammanagement.dto.QuestionDTO;
+import com.techpower.exammanagement.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -12,34 +11,34 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "*")
 @RequestMapping("/api/v1")
-public class ExamController {
+public class QuestionController {
     @Autowired
-    private IExamService iExamService;
+    private IQuestionService iQuestionService;
 
-    @GetMapping("/exam/list")
-    public List<ExamDTO> getAll() {
-        return iExamService.getAll();
+    @GetMapping("/question/list")
+    public List<QuestionDTO> getAll() {
+        return iQuestionService.getAll();
     }
 
-    @GetMapping("/exam/{id}")
-    public ExamDTO getDetail(@PathVariable long id) {
-        return iExamService.getDetail(id);
+    @GetMapping("/question/{id}")
+    public QuestionDTO getDetail(@PathVariable long id) {
+        return iQuestionService.getDetail(id);
     }
 
-    @PostMapping("/exam/{id}")
-    public ExamDTO save(@PathVariable long id, @RequestBody ExamDTO dto) {
-        return iExamService.save(dto, id);
+    @PostMapping("/question/{idExam}")
+    public QuestionDTO save(@PathVariable long idExam, @RequestBody QuestionDTO dto) {
+        return iQuestionService.save(dto, idExam);
     }
 
-    @PutMapping("/exam/{id}")
-    public ExamDTO update(@PathVariable long id, @RequestBody ExamDTO dto) {
+    @PutMapping("/question/{id}")
+    public QuestionDTO update(@PathVariable long id, @RequestBody QuestionDTO dto) {
         dto.setId(id);
-        return iExamService.update(dto);
+        return iQuestionService.update(dto);
     }
 
-    @DeleteMapping("/exam/{id}")
+    @DeleteMapping("/question/{id}")
     public ResponseEntity<?> deleteProduct(@PathVariable long id) {
-        iExamService.remove(id);
+        iQuestionService.remove(id);
         return ResponseEntity.ok().build();
     }
 }

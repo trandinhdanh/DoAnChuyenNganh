@@ -8,18 +8,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
-@Table(name = "exam")
+@Table(name = "question")
 @Getter
 @Setter
-public class ExamEntity {
+public class QuestionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @Column
     private String question;
-    @OneToMany(mappedBy = "exam")
+    @OneToMany(mappedBy = "question")
     private List<AnswerEntity> answer = new ArrayList<>();
     @ManyToOne
-    @JoinColumn(name = "course_id")
-    private CourseEntity course;
+    @JoinColumn(name = "exam_id")
+    private ExamEntity exam;
 }

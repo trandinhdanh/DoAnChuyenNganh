@@ -1,15 +1,16 @@
 package com.techpower.exammanagement.service.impl;
+
 import com.techpower.exammanagement.converter.CourseConverter;
+import com.techpower.exammanagement.converter.StudentConverter;
 import com.techpower.exammanagement.dto.CourseDTO;
-import com.techpower.exammanagement.entity.CourseEntity;
-import com.techpower.exammanagement.entity.ExamEntity;
-import com.techpower.exammanagement.repository.AnswerRepository;
-import com.techpower.exammanagement.repository.CourseRepository;
-import com.techpower.exammanagement.repository.ExamRepository;
+import com.techpower.exammanagement.dto.StudentDTO;
+import com.techpower.exammanagement.entity.*;
+import com.techpower.exammanagement.repository.*;
 import com.techpower.exammanagement.service.ICourseService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,9 +21,19 @@ public class CourseService implements ICourseService {
     @Autowired
     private ExamRepository examRepository;
     @Autowired
+    private QuestionRepository questionRepository;
+    @Autowired
     private AnswerRepository answerRepository;
     @Autowired
+    private TeacherRepository teacherRepository;
+    @Autowired
+    private StudentRepository studentRepository;
+    @Autowired
+    private UserRepository userRepository;
+    @Autowired
     private CourseConverter courseConverter;
+    @Autowired
+    private StudentConverter studentConverter;
 
     @Override
     public List<CourseDTO> getAll() {
@@ -39,8 +50,10 @@ public class CourseService implements ICourseService {
     }
 
     @Override
-    public CourseDTO save(CourseDTO dto) {
+    public CourseDTO save(CourseDTO dto, long idUser) {
         CourseEntity courseEntity = courseConverter.toEntity(dto);
+        TeacherEntity teacher = teacherRepository.findOneByUser(userRepository.findOneById(idUser));
+        courseEntity.setTeacher(teacher);
         return courseConverter.toDTO(courseRepository.save(courseEntity));
     }
 
@@ -57,10 +70,31 @@ public class CourseService implements ICourseService {
         if (courseRepository.findOneById(id) != null) {
             CourseEntity courseEntity = courseRepository.findOneById(id);
             for (ExamEntity examEntity : examRepository.findAllByCourse(courseEntity)) {
-                answerRepository.deleteAllByExam(examEntity);
+                for (QuestionEntity questionEntity : questionRepository.findAllByExam(examEntity)) {
+                    answerRepository.deleteAllByQuestion(questionEntity);
+                }
+                questionRepository.deleteAllByExam(examEntity);
+
             }
             examRepository.deleteAllByCourse(courseEntity);
             courseRepository.deleteById(id);
         }
+    }
+
+    @Override
+    @Transactional
+    public CourseDTO addStudentToCourse(long idCourse, long idUser) {
+        CourseEntity courseEntity = courseRepository.findOneById(idCourse);
+
+        List<StudentEntity> students = new ArrayList<>();
+        List<StudentDTO> studentDTOS = new ArrayList<>();
+        StudentEntity studentEntity = studentRepository.findOneByUser(userRepository.findOneById(idUser));
+        students.add(studentEntity);
+        studentDTOS.add(studentConverter.toDTO(studentEntity));
+
+        courseEntity.setStudents(students);
+        CourseDTO result = courseConverter.toDTO(courseRepository.save(courseEntity));
+        result.setStudents(studentDTOS);
+        return result;
     }
 }

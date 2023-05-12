@@ -1,27 +1,25 @@
 package com.techpower.exammanagement.converter;
 
-import com.techpower.exammanagement.dto.AnswerDTO;
-import com.techpower.exammanagement.dto.CourseDTO;
-import com.techpower.exammanagement.entity.AnswerEntity;
-import com.techpower.exammanagement.entity.CourseEntity;
+import com.techpower.exammanagement.dto.ExamDTO;
+import com.techpower.exammanagement.entity.ExamEntity;
 import org.springframework.stereotype.Component;
 
 @Component
-public class CourseConverter {
-    public CourseDTO toDTO(CourseEntity entity) {
-        CourseDTO dto = new CourseDTO();
+public class ExamConverter {
+    public ExamDTO toDTO(ExamEntity entity) {
+        ExamDTO dto = new ExamDTO();
         dto.setId(entity.getId());
         dto.setName(entity.getName());
         return dto;
     }
 
-    public CourseEntity toEntity(CourseDTO dto) {
-        CourseEntity entity = new CourseEntity();
+    public ExamEntity toEntity(ExamDTO dto) {
+        ExamEntity entity = new ExamEntity();
         entity.setName(dto.getName());
         return entity;
     }
 
-    public CourseEntity toEntity(CourseDTO dto, CourseEntity entity) {
+    public ExamEntity toEntity(ExamDTO dto, ExamEntity entity) {
         entity.setName(dto.getName());
         return entity;
     }
