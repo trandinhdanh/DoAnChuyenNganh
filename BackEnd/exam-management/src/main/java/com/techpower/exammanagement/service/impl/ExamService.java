@@ -71,4 +71,11 @@ public class ExamService implements IExamService {
             examRepository.deleteById(id);
         }
     }
+
+    @Override
+    public List<ExamDTO> getExamsByCourse(long idCourse) {
+        CourseEntity course = courseRepository.findOneById(idCourse);
+        List<ExamEntity> exams = examRepository.findAllByCourse(course);
+        return examConverter.toDTOs(exams);
+    }
 }

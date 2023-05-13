@@ -7,28 +7,27 @@ const getAuthConfig = () => ({
       Authorization: `Bearer ${localStorage.getItem("access_token")}`
   }
 });
-
 const examAPI = {
-  getAll: async () => {
-    const response = await axios.get(`${BASE_URL}/api/v1/exam/list`, getAuthConfig());
+  getAll: async (idCourse) => {
+    const response = await axios.get(`${BASE_URL}/api/v1/exam/course/${idCourse}`, getAuthConfig());
     console.log(response.data)
     return response.data;
   },
 
   getById: async (id) => {
-    const response = await axios.get(`${BASE_URL}/api/v1/student/${id}`, getAuthConfig());
+    const response = await axios.get(`${BASE_URL}/api/v1/exam/${id}`, getAuthConfig());
     return response.data;
   },
 
-  create: async (course,id) => {
-    const response = await axios.post(`${BASE_URL}/api/v1/exam/${id}`, course,  {
+  create: async (exam,id) => {
+    const response = await axios.post(`${BASE_URL}/api/v1/exam/${id}`, exam,  {
       ...getAuthConfig(),
       'Content-Type': 'multipart/form-data'
 });
     return response.data;
   },
-  update: async (id, course) => {
-    const response = await axios.put(`${BASE_URL}/api/v1/exam/${id}`, course,  {
+  update: async ( exam,id) => {
+    const response = await axios.put(`${BASE_URL}/api/v1/exam/${id}`, exam,  {
       ...getAuthConfig(),
       'Content-Type': 'multipart/form-data'
 });
@@ -36,7 +35,7 @@ const examAPI = {
   },
 
   delete: async (id) => {
-    const response = await axios.delete(`${BASE_URL}/api/v1/course/${id}`, getAuthConfig());
+    const response = await axios.delete(`${BASE_URL}/api/v1/exam/${id}`, getAuthConfig());
     return response.data;
   }
 };

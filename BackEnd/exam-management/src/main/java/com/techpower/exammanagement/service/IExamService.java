@@ -12,4 +12,5 @@ public interface IExamService {
     ExamDTO update(ExamDTO dto);
 
     void remove(long id);
+    List<ExamDTO> getExamsByCourse(long idCourse);
 }

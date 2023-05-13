@@ -37,7 +37,7 @@ import { useAuth } from '../../context/AuthContext';
 
 export default function CoursePage() {
   const [open, setOpen] = useState(null);
-const{ userDTO} = useAuth();
+  const { userDTO} = useAuth();
   const [page, setPage] = useState(0);
 
 

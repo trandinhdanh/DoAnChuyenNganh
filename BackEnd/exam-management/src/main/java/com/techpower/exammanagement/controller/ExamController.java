@@ -39,4 +39,8 @@ public class ExamController {
         iExamService.remove(id);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/exam/course/{idCourse}")
+    public List<ExamDTO> getExamsByCourse(@PathVariable long idCourse) {
+        return iExamService.getExamsByCourse(idCourse);
+    }
 }

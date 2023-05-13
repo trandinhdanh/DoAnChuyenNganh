@@ -20,6 +20,7 @@ import ProtectedRoute from './shared/ProtectedRoute';
 import ExamPage from './pages/exam/ExamPage';
 import CoursePage from './pages/course/CoursePage';
 import UpdateCourse from './pages/course/UpdateCourse';
+import UpdateExam from './pages/exam/UpdateExam';
 
 
 
@@ -75,6 +76,7 @@ export default function Router() {
         { path: "studentUpdate/:id", element: <UpdateStudent /> },
         { path: "studentNew", element: <NewStudent /> },
         { path: "exam/:id", element: <ExamPage /> },
+        { path: "examUpdate/:id", element: <UpdateExam /> },
         { path: "course", element: <CoursePage /> },
         { path: "courseUpdate/:id", element: <UpdateCourse /> },
       ],
