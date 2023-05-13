@@ -5,6 +5,8 @@ import com.techpower.exammanagement.converter.QuestionConverter;
 import com.techpower.exammanagement.dto.AnswerDTO;
 import com.techpower.exammanagement.dto.QuestionDTO;
 import com.techpower.exammanagement.entity.AnswerEntity;
+import com.techpower.exammanagement.entity.CourseEntity;
+import com.techpower.exammanagement.entity.ExamEntity;
 import com.techpower.exammanagement.entity.QuestionEntity;
 import com.techpower.exammanagement.repository.AnswerRepository;
 import com.techpower.exammanagement.repository.QuestionRepository;
@@ -121,5 +123,12 @@ public class QuestionService implements IQuestionService {
             answerRepository.deleteAllByQuestion(questionEntity);
             questionRepository.deleteById(id);
         }
+    }
+
+    @Override
+    public List<QuestionDTO> getQuestionsByExam(long idExam) {
+        ExamEntity exam = examRepository.findOneById(idExam);
+        List<QuestionEntity> questions = questionRepository.findAllByExam(exam);
+        return questionConverter.toDTOs(questions);
     }
 }

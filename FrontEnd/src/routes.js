@@ -21,6 +21,8 @@ import ExamPage from './pages/exam/ExamPage';
 import CoursePage from './pages/course/CoursePage';
 import UpdateCourse from './pages/course/UpdateCourse';
 import UpdateExam from './pages/exam/UpdateExam';
+import QuestionPage from './pages/question/QuestionPage';
+import NewQuestionPage from './pages/question/NewQuestionPage';
 
 
 
@@ -79,6 +81,8 @@ export default function Router() {
         { path: "examUpdate/:id", element: <UpdateExam /> },
         { path: "course", element: <CoursePage /> },
         { path: "courseUpdate/:id", element: <UpdateCourse /> },
+        { path: "question/:id", element: <QuestionPage /> },
+        { path: "questionNew/:id", element: <NewQuestionPage /> },
       ],
     },
     

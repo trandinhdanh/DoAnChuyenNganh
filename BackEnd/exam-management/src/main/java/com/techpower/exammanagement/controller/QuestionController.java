@@ -1,5 +1,6 @@
 package com.techpower.exammanagement.controller;
 
+import com.techpower.exammanagement.dto.ExamDTO;
 import com.techpower.exammanagement.dto.QuestionDTO;
 import com.techpower.exammanagement.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,5 +41,9 @@ public class QuestionController {
     public ResponseEntity<?> deleteProduct(@PathVariable long id) {
         iQuestionService.remove(id);
         return ResponseEntity.ok().build();
+    }
+    @GetMapping("/question/exam/{idExam}")
+    public List<QuestionDTO> getQuestionsByExam(@PathVariable long idExam) {
+        return iQuestionService.getQuestionsByExam(idExam);
     }
 }

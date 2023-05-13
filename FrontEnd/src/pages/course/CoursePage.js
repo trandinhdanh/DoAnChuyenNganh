@@ -151,7 +151,7 @@ export default function CoursePage() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="right">Id</TableCell>
-                    <TableCell align="right">Name</TableCell>
+                    <TableCell align="right">Name Course</TableCell>
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
                 </TableHead>

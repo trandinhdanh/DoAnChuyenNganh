@@ -137,7 +137,7 @@ export default function ExamPage() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Exam
+           Course / Exam
           </Typography>
           <Button onClick={handleOpenCouse} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
             New Exam
@@ -152,7 +152,7 @@ export default function ExamPage() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="right">Id</TableCell>
-                    <TableCell align="right">Name</TableCell>
+                    <TableCell align="right">Name Exam</TableCell>
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
                 </TableHead>
@@ -164,7 +164,7 @@ export default function ExamPage() {
                     >
 
                       <TableCell align="right">{row.id}</TableCell>
-                      <TableCell align="right"><Link to={`/dashboard/exam/${row.id}`}>{row.name}</Link></TableCell>
+                      <TableCell align="right"><Link to={`/dashboard/question/${row.id}`}>{row.name}</Link></TableCell>
                       <TableCell align="right" >
 
                       <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, row.id)}>
