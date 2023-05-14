@@ -1,17 +1,23 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Stack, Container, TextField, FormControlLabel, RadioGroup, Radio } from '@mui/material';
+import { Button, Stack, Container, TextField, FormControlLabel, Radio } from '@mui/material';
 import questionAPI from '../../services/questionAPI';
 
-export default function NewQuestionPage() {
+export default function UpdateQuestionPage() {
   const { id } = useParams();
   const [questionState, setQuestionState] = useState('');
   const [answers, setAnswers] = useState([]);
-  const [selectedAnswer, setSelectedAnswer] = useState(-1);
+  const [question, setQuestion] = useState('');
 
-  const handleAddAnswer = () => {
-    setAnswers((prevAnswers) => [...prevAnswers, { answer: '', isCorrect: false }]);
-  };
+  useEffect(() => {
+    const fetchQuestion = async () => {
+      const response = await questionAPI.getById(id);
+      setQuestion(response);
+      setQuestionState(response.question);
+      setAnswers(response.answers);
+    };
+    fetchQuestion();
+  }, [id]);
 
   const handleAnswerChange = (index, value) => {
     setAnswers((prevAnswers) => {
@@ -29,13 +35,12 @@ export default function NewQuestionPage() {
       }));
       return updatedAnswers;
     });
-    setSelectedAnswer(index);
   };
 
   const handleSendQuestion = async () => {
     const formattedAnswers = answers.map((answer, index) => ({
       answer: answer.answer,
-      correctAnswer: index === selectedAnswer ? 1 : 0,
+      correctAnswer: answer.correctAnswer,
     }));
 
     const questionData = {
@@ -44,11 +49,11 @@ export default function NewQuestionPage() {
     };
 
     try {
-      const response = await questionAPI.create(id, questionData);
+      const response = await questionAPI.update(id, questionData);
       console.log(response.data);
       // window.location.reload();
     } catch (error) {
-      console.error('error create question', error);
+      console.error('error update question', error);
     }
 
     console.log(questionData);
@@ -59,14 +64,15 @@ export default function NewQuestionPage() {
       <Stack spacing={2}>
         <TextField
           fullWidth
+          margin="normal"
+          required
           label="Enter Question"
           value={questionState}
           onChange={(e) => setQuestionState(e.target.value)}
         />
 
-        <RadioGroup value={selectedAnswer.toString()} onChange={(e) => handleIsCorrectChange(parseInt(e.target.value, 10))}>
           {answers.map((answer, index) => (
-            <Stack key={index} spacing={2} direction="row" sx={{ marginTop: '8px', marginBottom: '8px' }}>
+            <Stack key={index} spacing={2} direction="row">
               <TextField
                 fullWidth
                 label={`Enter Answer ${index + 1}`}
@@ -74,18 +80,16 @@ export default function NewQuestionPage() {
                 onChange={(e) => handleAnswerChange(index, e.target.value)}
               />
               <FormControlLabel
-                value={index.toString()}
-                control={<Radio />}
+                control={
+                  <Radio
+                    checked={answer.isCorrect}
+                    onChange={() => handleIsCorrectChange(index)}
+                  />
+                }
                 label="Is correct?"
               />
             </Stack>
           ))}
-        </RadioGroup>
-
-        <Button sx={{ width: '200px' }} variant="contained" onClick={handleAddAnswer}>
-          Add Answer
-        </Button>
-
         <Button sx={{ width: '200px' }} variant="contained" onClick={handleSendQuestion}>
           Send Question
         </Button>

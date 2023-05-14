@@ -23,6 +23,7 @@ import UpdateCourse from './pages/course/UpdateCourse';
 import UpdateExam from './pages/exam/UpdateExam';
 import QuestionPage from './pages/question/QuestionPage';
 import NewQuestionPage from './pages/question/NewQuestionPage';
+import UpdateQuestionPage from './pages/question/UpdateQuestionPage';
 
 
 
@@ -83,6 +84,7 @@ export default function Router() {
         { path: "courseUpdate/:id", element: <UpdateCourse /> },
         { path: "question/:id", element: <QuestionPage /> },
         { path: "questionNew/:id", element: <NewQuestionPage /> },
+        { path: "questionUpdate/:id", element: <UpdateQuestionPage /> },
       ],
     },
     
