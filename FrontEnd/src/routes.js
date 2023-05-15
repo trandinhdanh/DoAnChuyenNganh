@@ -25,6 +25,7 @@ import UpdateExam from './pages/exam/UpdateExam';
 import QuestionPage from './pages/question/QuestionPage';
 import NewQuestionPage from './pages/question/NewQuestionPage';
 import UpdateQuestionPage from './pages/question/UpdateQuestionPage';
+import MyExam from './pages/MyExam';
 
 
 
@@ -104,6 +105,7 @@ export default function Router() {
         { path: "products", element: <ProductsPage /> },
         { path: "blog", element: <BlogPage /> },
         { path: "progress", element: <ProgressExamPage /> },
+        { path: "mycourse/:id", element: <MyExam /> },
       ],
     },
 
