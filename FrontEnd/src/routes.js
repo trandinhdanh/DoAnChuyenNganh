@@ -13,6 +13,7 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import NewTeacher from './pages/teacher/NewTeacher';
 import StudentPage from './pages/student/StudentPage';
+import ProgressExamPage from './pages/student/ProgressExamPage';
 import NewStudent from './pages/student/NewStudent';
 import UpdateTeacher from './pages/teacher/UpdateTeacher';
 import UpdateStudent from './pages/student/UpdateStudent';
@@ -102,6 +103,7 @@ export default function Router() {
       children: [
         { path: "products", element: <ProductsPage /> },
         { path: "blog", element: <BlogPage /> },
+        { path: "progress", element: <ProgressExamPage /> },
       ],
     },
 
