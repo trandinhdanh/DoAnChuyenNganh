@@ -13,7 +13,6 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import NewTeacher from './pages/teacher/NewTeacher';
 import StudentPage from './pages/student/StudentPage';
-import ProgressExamPage from './pages/student/ProgressExamPage';
 import NewStudent from './pages/student/NewStudent';
 import UpdateTeacher from './pages/teacher/UpdateTeacher';
 import UpdateStudent from './pages/student/UpdateStudent';
@@ -25,14 +24,10 @@ import UpdateExam from './pages/exam/UpdateExam';
 import QuestionPage from './pages/question/QuestionPage';
 import NewQuestionPage from './pages/question/NewQuestionPage';
 import UpdateQuestionPage from './pages/question/UpdateQuestionPage';
-
-
+import HomePage from './pages/guest/home';
+import MyCourse from './pages/MyCourse';
 
 // // ----------------------------------------------------------------------
-
-
-
-
 
 export default function Router() {
 
@@ -88,7 +83,7 @@ export default function Router() {
         { path: "questionUpdate/:id", element: <UpdateQuestionPage /> },
       ],
     },
-    
+
     {
       path: "dashboard",
       element: (
@@ -103,14 +98,14 @@ export default function Router() {
       children: [
         { path: "products", element: <ProductsPage /> },
         { path: "blog", element: <BlogPage /> },
-        { path: "progress", element: <ProgressExamPage /> },
+        { path: "mycourse", element: <MyCourse /> },
       ],
     },
-
     {
       element: <SimpleLayout />,
       children: [
         { path: "404", element: <Page404 /> },
+        { path: "/", element: <HomePage /> },
         { path: "*", element: <Navigate to="/404" replace /> },
       ],
     },

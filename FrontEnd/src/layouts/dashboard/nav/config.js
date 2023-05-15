@@ -50,10 +50,9 @@ const navConfigStudent = [
   icon: icon('ic_blog'),
 },
 {
-  title: 'progress',
-  path: '/dashboard/progress',
+  title: 'mycourse',
+  path: '/dashboard/mycourse',
   icon: icon('ic_blog'),
 },
 ];
 export {navConfigAdmin,navConfigTeacher,navConfigStudent};
-

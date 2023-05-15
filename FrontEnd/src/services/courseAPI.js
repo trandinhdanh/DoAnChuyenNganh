@@ -4,7 +4,7 @@ const BASE_URL = 'http://localhost:8080';
 
 const getAuthConfig = () => ({
   headers: {
-      Authorization: `Bearer ${localStorage.getItem("access_token")}`
+      // Authorization: `Bearer ${localStorage.getItem("access_token")}`
   }
 });
 
