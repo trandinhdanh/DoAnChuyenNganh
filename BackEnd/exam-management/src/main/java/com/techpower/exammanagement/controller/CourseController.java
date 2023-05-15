@@ -26,14 +26,19 @@ public class CourseController {
         return iCourseService.getDetail(id);
     }
 
+    @GetMapping("/course/{idCourse}/students")
+    public ResponseEntity<List<StudentDTO>>  getStudentsByCourse(@PathVariable long idCourse) {
+        return ResponseEntity.ok().body(iCourseService.getStudentsByCourse(idCourse));
+    }
+
     @PostMapping("/course/{idUser}")
     public CourseDTO save(@RequestBody CourseDTO dto, @PathVariable long idUser) {
         return iCourseService.save(dto, idUser);
     }
 
-    @PostMapping("/course/{idCourse}/{idUser}")
-    public CourseDTO addStudentToCourse(@PathVariable long idCourse, @PathVariable long idUser) {
-        return iCourseService.addStudentToCourse(idCourse, idUser);
+    @PostMapping("/course/{idCourse}/{idStudents}")
+    public CourseDTO addStudentToCourse(@PathVariable long idCourse, @PathVariable List<Long> idStudents) {
+        return iCourseService.addStudentToCourse(idCourse, idStudents);
     }
 
     @PutMapping("/course/{id}")
