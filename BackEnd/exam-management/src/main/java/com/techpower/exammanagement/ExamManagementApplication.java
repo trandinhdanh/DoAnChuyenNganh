@@ -19,17 +19,17 @@ ExamManagementApplication {
     }
 
 
-//    @Bean
-//    CommandLineRunner runner(
-//            UserRepository customerRepository,
-//                PasswordEncoder passwordEncoder) {
-//        return args -> {
-//            User customer = new User(
-//                    "admin",
-//                    passwordEncoder.encode("admin"),
-//                    Status.ACTIVE,
-//                    Role.ADMIN);
-//            customerRepository.save(customer);
-//        };
-//    }
+    @Bean
+    CommandLineRunner runner(
+            UserRepository customerRepository,
+                PasswordEncoder passwordEncoder) {
+        return args -> {
+            User customer = new User(
+                    "admin",
+                    passwordEncoder.encode("admin"),
+                    Status.ACTIVE,
+                    Role.ADMIN);
+            customerRepository.save(customer);
+        };
+    }
 }

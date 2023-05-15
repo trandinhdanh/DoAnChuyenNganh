@@ -10,14 +10,19 @@ export default function UpdateCourse() {
 
   const navigate = useNavigate();
 
-  useEffect(() => { 
-    console.log(id);
-   },[])
+  useEffect(() => {
+    const fetchTeachers = async () => {
+      const data = await courseAPI.getById(id);
+      setNameCourse(data.name);
+      console.log(data.name);
+    };
+    fetchTeachers();
+  }, []);
   const handleSubmit = async (e) => {
     e.preventDefault();
     try{
     const response = await courseAPI.update(id, {name : nameCourse});
-    console.log(response.data);
+    console.log(response);
   } catch (error) {
     console.error(error);
   }

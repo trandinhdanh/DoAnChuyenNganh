@@ -16,12 +16,12 @@ const courseAPI = {
   },
 
   getById: async (id) => {
-    const response = await axios.get(`${BASE_URL}/api/v1/student/${id}`, getAuthConfig());
+    const response = await axios.get(`${BASE_URL}/api/v1/course/${id}`, getAuthConfig());
     return response.data;
   },
 
-  create: async (course) => {
-    const response = await axios.post(`${BASE_URL}/api/v1/course`, course,  {
+  create: async (course,id) => {
+    const response = await axios.post(`${BASE_URL}/api/v1/course/${id}`, course,  {
       ...getAuthConfig(),
       'Content-Type': 'multipart/form-data'
 });
