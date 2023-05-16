@@ -14,6 +14,7 @@ const examAPI = {
     return response.data;
   },
 
+
   getById: async (id) => {
     const response = await axios.get(`${BASE_URL}/api/v1/exam/${id}`, getAuthConfig());
     return response.data;

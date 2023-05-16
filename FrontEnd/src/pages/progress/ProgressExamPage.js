@@ -2,7 +2,6 @@ import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
 import { Link, useNavigate, useParams } from 'react-router-dom';
-import axios from 'axios';
 // @mui
 import {
   Modal,
@@ -36,9 +35,8 @@ import studentApi from '../../services/StudentAPI';
 import courseAPI from '../../services/courseAPI';
 import { useAuth } from '../../context/AuthContext';
 import examAPI from '../../services/examAPI';
-import questionAPI from '../../services/questionAPI';
 
-export default function ProgressExamPage() {
+export default function ExamPage() {
   const {id} = useParams()
   const [open, setOpen] = useState(null);
   const { userDTO} = useAuth();
@@ -53,8 +51,7 @@ export default function ProgressExamPage() {
   const [idRow, setIdRow] = useState(-1)
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
-  const [completed, setCompleted] = useState(false);
-  const [completedQuestions, setCompletedQuestions] = useState([]);
+
   const [exam, setExam] = useState([]);
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -72,11 +69,41 @@ export default function ProgressExamPage() {
   const handleOpenCouse = () => {
     setOpenCourse(true);
   };
+
+  const handleClose = () => {
+    setOpenCourse(false);
+  };
+
+  const handleOk = async () =>  {
+    console.log(userDTO);
+    try {
+      const response = await examAPI.create({name : examName},id);
+      console.log(response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error("error create student", error);
+    }
+   
+  };
+
+  const handleCancel = () => {
+    // Xử lý logic khi nhấn nút Hủy bỏ
+    handleClose();
+  };
+
+  const handleChange = (event) => {
+    setExamName(event.target.value);
+    console.log(examName)
+  };
+  // end
   const handleOpenMenu = (event, id) => {
     setIdRow(id);
     setOpen(event.currentTarget);
   };
 
+  const handleCloseMenu = () => {
+    setOpen(null);
+  };
 
   const handleChangePage = (event, newPage) => {
     setPage(newPage);
@@ -87,21 +114,37 @@ export default function ProgressExamPage() {
     setRowsPerPage(parseInt(event.target.value, 10));
   };
 
-
-  // useEffect(() => {
-  //   const checkCompletion = () => {
-  //     let isCompleted = true;
-  //     examAPI.forEach((row) => {
-  //       if (!completedQuestions.includes(row.id)) {
-  //         isCompleted = false;
-  //       }
-  //     });
-  //     setCompleted(isCompleted);
-  //   };
-
-  //   checkCompletion();
-  // }, [completedQuestions, exam]);
-
+  const handleFilterByName = (event) => {
+    setPage(0);
+    setFilterName(event.target.value);
+  };
+  const handleDelete = async (id) => {
+    try {
+      const response = await examAPI.delete(id);
+      console.log(response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+    const handleCompleteExam = async (examId) => {
+      try {
+        // Gọi API để cập nhật trạng thái completed của bài thi
+        const response = await examAPI.update({ completed: true }, examId);
+        console.log(response); // In ra kết quả từ API (tùy chỉnh cho phù hợp)
+        
+        // Cập nhật trạng thái completed của bài thi trong danh sách exams
+        const updatedExams = exams.map((exam) => {
+          if (exam.id === examId) {
+            return { ...exam, completed: true };
+          }
+          return exam;
+        });
+        setExams(updatedExams);
+      } catch (error) {
+        console.error(error);
+      }
+    };
+  }
   return (
     <>
       <Helmet>
@@ -127,7 +170,7 @@ export default function ProgressExamPage() {
                   <TableRow>
                     <TableCell align="right">Id</TableCell>
                     <TableCell align="right">Name Exam</TableCell>
-                    <TableCell align="right">Progress</TableCell>
+                    <TableCell align="right">Process</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -140,12 +183,20 @@ export default function ProgressExamPage() {
                       <TableCell align="right">{row.id}</TableCell>
                       <TableCell align="right"><Link to={`/dashboard/question/${row.id}`}>{row.name}</Link></TableCell>
                       <TableCell align="right" >
-                      {/* {completedQuestions.includes(row.id) ? 'Hoàn thành' : 'Chưa hoàn thành'} */}
+
                       <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, row.id)}>
                           <Iconify icon={'eva:more-vertical-fill'} />
                         </IconButton>
                        
                       </TableCell>
+                      <td>{exam.name}</td>
+      <td>
+        {exam.completed ? (
+          <button disabled>Đã hoàn thành</button>
+        ) : (
+          <button onClick={() => handleCompleteExam(exam.id)}>Chưa hoàn thành</button>
+        )}
+      </td>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -165,7 +216,59 @@ export default function ProgressExamPage() {
         </Card>
       </Container>
 
-      
+      <Popover
+        open={Boolean(open)}
+        anchorEl={open}
+        onClose={handleCloseMenu}
+        anchorOrigin={{ vertical: 'top', horizontal: 'left' }}
+        transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+        PaperProps={{
+          sx: {
+            p: 1,
+            width: 140,
+            '& .MuiMenuItem-root': {
+              px: 1,
+              typography: 'body2',
+              borderRadius: 0.75,
+            },
+          },
+        }}
+      >
+        <MenuItem onClick={() => {
+                          navigate(`/dashboard/progressUpdate/${idRow}`)
+                        }} >
+          <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
+          Edit
+        </MenuItem>
+
+        <MenuItem sx={{ color: 'error.main' }} onClick={() => {
+                          handleDelete(idRow)
+                        }}>
+          <Iconify icon={'eva:trash-2-outline'} sx={{ mr: 2 }} />
+          Delete
+        </MenuItem>
+      </Popover>
+      <Modal open={openCourse} onClose={handleClose}>
+        <div style={{ margin: 'auto', marginTop: 100, width: 300, backgroundColor: '#FFF', padding: 20 }}>
+          <TextField
+            label="Tên khóa học"
+            value={examName}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <div style={{ textAlign: 'right', marginTop: 10 }}>
+            {examName.length === 0 ? 
+           ""
+          :  <Button onClick={handleOk} color="primary" variant="contained" style={{ marginRight: 10 }}>
+          OK
+        </Button>}
+            <Button onClick={handleCancel} color="secondary" variant="contained">
+              Hủy bỏ
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

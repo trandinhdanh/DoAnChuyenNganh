@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 // @mui
 import {
   Modal,
@@ -34,10 +34,8 @@ import { UserListToolbar } from '../../sections/@dashboard/user';
 import studentApi from '../../services/StudentAPI';
 import courseAPI from '../../services/courseAPI';
 import { useAuth } from '../../context/AuthContext';
-import examAPI from '../../services/examAPI';
 
-export default function ExamPage() {
-  const {id} = useParams()
+export default function ProgressCoursePage() {
   const [open, setOpen] = useState(null);
   const { userDTO} = useAuth();
   const [page, setPage] = useState(0);
@@ -52,19 +50,19 @@ export default function ExamPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [exam, setExam] = useState([]);
+  const [course, setCourse] = useState([]);
   useEffect(() => {
     const fetchTeachers = async () => {
-      const data = await examAPI.getAll(id);
-      setExam(data);
+      const data = await courseAPI.getAll();
+      setCourse(data);
     };
     fetchTeachers();
   }, []);
   const navigate = useNavigate()
 
-  // new exam
+  // new course
   const [openCourse, setOpenCourse] = useState(false);
-  const [examName, setExamName] = useState('');
+  const [courseName, setCourseName] = useState('');
 
   const handleOpenCouse = () => {
     setOpenCourse(true);
@@ -77,7 +75,7 @@ export default function ExamPage() {
   const handleOk = async () =>  {
     console.log(userDTO);
     try {
-      const response = await examAPI.create({name : examName},id);
+      const response = await courseAPI.create({name : courseName},localStorage.getItem("user"));
       console.log(response.data);
       window.location.reload();
     } catch (error) {
@@ -92,8 +90,8 @@ export default function ExamPage() {
   };
 
   const handleChange = (event) => {
-    setExamName(event.target.value);
-    console.log(examName)
+    setCourseName(event.target.value);
+    console.log(courseName)
   };
   // end
   const handleOpenMenu = (event, id) => {
@@ -120,7 +118,7 @@ export default function ExamPage() {
   };
   const handleDelete = async (id) => {
     try {
-      const response = await examAPI.delete(id);
+      const response = await courseAPI.delete(id);
       console.log(response.data);
       window.location.reload();
     } catch (error) {
@@ -128,31 +126,24 @@ export default function ExamPage() {
     }
 
   }
-  const renderCompletionButton = (completed) => {
-    if (completed) {
-      return <button disabled>Đã hoàn thành</button>;
-    } else {
-      return <button>Chưa hoàn thành</button>;
-    }
-  };
-
   return (
     <>
       <Helmet>
-        <title> Exam | Minimal UI </title>
+        <title> Course | Minimal UI </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-           Course / Exam
+            Course List
           </Typography>
           <Button onClick={handleOpenCouse} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Exam
+            New Course
           </Button>
         </Stack>
 
         <Card>
+          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -160,33 +151,10 @@ export default function ExamPage() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="right">Id</TableCell>
-                    <TableCell align="right">Name Exam</TableCell>
+                    <TableCell align="right">Name Course</TableCell>
                     <TableCell align="right">Action</TableCell>
-                    <TableCell align="right">Process</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                  {exam.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-
-                      <TableCell align="right">{row.id}</TableCell>
-                      <TableCell align="right"><Link to={`/dashboard/question/${row.id}`}>{row.name}</Link></TableCell>
-                      <TableCell align="right" >
-
-                      <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, row.id)}>
-                          <Iconify icon={'eva:more-vertical-fill'} />
-                        </IconButton>
-                       
-                      </TableCell>
-                     
-
-                    </TableRow>
-                    
-                  ))}
-                </TableBody>
               </Table>
             </TableContainer>
           </Scrollbar>
@@ -194,7 +162,7 @@ export default function ExamPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={exam.length}
+            count={course.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -222,7 +190,7 @@ export default function ExamPage() {
         }}
       >
         <MenuItem onClick={() => {
-                          navigate(`/dashboard/examUpdate/${idRow}`)
+                          navigate(`/dashboard/courseProcessUpdate/${idRow}`)
                         }} >
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
@@ -239,13 +207,13 @@ export default function ExamPage() {
         <div style={{ margin: 'auto', marginTop: 100, width: 300, backgroundColor: '#FFF', padding: 20 }}>
           <TextField
             label="Tên khóa học"
-            value={examName}
+            value={courseName}
             onChange={handleChange}
             fullWidth
             margin="normal"
           />
           <div style={{ textAlign: 'right', marginTop: 10 }}>
-            {examName.length === 0 ? 
+            {courseName.length === 0 ? 
            ""
           :  <Button onClick={handleOk} color="primary" variant="contained" style={{ marginRight: 10 }}>
           OK

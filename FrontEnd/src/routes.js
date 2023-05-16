@@ -13,7 +13,10 @@ import ProductsPage from './pages/ProductsPage';
 import DashboardAppPage from './pages/DashboardAppPage';
 import NewTeacher from './pages/teacher/NewTeacher';
 import StudentPage from './pages/student/StudentPage';
-import ProgressExamPage from './pages/student/ProgressExamPage';
+import ProgressExamPage from './pages/progress/ProgressExamPage';
+import ProgressCoursePage from './pages/progress/ProcessCoursePage';
+import UpdateProcess from './pages/progress/UpdateProcess';
+import UpdateCourseProcess from './pages/progress/UpdateCourseProcess';
 import NewStudent from './pages/student/NewStudent';
 import UpdateTeacher from './pages/teacher/UpdateTeacher';
 import UpdateStudent from './pages/student/UpdateStudent';
@@ -103,7 +106,11 @@ export default function Router() {
       children: [
         { path: "products", element: <ProductsPage /> },
         { path: "blog", element: <BlogPage /> },
-        { path: "progress", element: <ProgressExamPage /> },
+        { path: "progress", element: <ProgressCoursePage /> },
+        { path: "courseProcessUpdate/:id", element: <UpdateCourseProcess/> },
+        { path: "progress/:id", element: <ProgressExamPage /> },
+        { path: "progressUpdate/:id", element: <UpdateProcess/> },
+        
       ],
     },
 
