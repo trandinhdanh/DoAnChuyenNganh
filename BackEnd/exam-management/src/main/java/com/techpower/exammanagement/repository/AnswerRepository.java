@@ -9,6 +9,7 @@ import java.util.List;
 
 @Repository
 public interface AnswerRepository extends JpaRepository<AnswerEntity, Long> {
+    AnswerEntity findOneById(long id);
     void deleteAllByQuestion(QuestionEntity questionEntity);
     List<AnswerEntity> findAllByQuestion(QuestionEntity questionEntity);
 }

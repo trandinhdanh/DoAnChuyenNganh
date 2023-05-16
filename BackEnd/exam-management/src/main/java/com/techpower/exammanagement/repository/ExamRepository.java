@@ -2,7 +2,7 @@ package com.techpower.exammanagement.repository;
 
 import com.techpower.exammanagement.entity.CourseEntity;
 import com.techpower.exammanagement.entity.ExamEntity;
-import com.techpower.exammanagement.entity.QuestionEntity;
+import com.techpower.exammanagement.entity.ExamResultEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
@@ -14,5 +14,9 @@ public interface ExamRepository extends JpaRepository<ExamEntity, Long> {
     void deleteAllByCourse(CourseEntity courseEntity);
 
     List<ExamEntity> findAllByCourse(CourseEntity courseEntity);
+
+    void deleteAllByExamResult(ExamResultEntity examResultEntity);
+
+    List<ExamEntity> findAllByExamResult(ExamResultEntity examResultEntity);
 }
 
