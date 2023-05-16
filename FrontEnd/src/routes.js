@@ -12,6 +12,7 @@ import DashboardAppPage from './pages/DashboardAppPage';
 import NewTeacher from './pages/NewTeacher';
 import StudentPage from './pages/StudentPage';
 import NewStudent from './pages/NewStudent';
+import Test from './pages/Test';
 
 // ----------------------------------------------------------------------
 
@@ -47,6 +48,7 @@ export default function Router() {
       path: '*',
       element: <Navigate to="/404" replace />,
     },
+    { path: 'test', element: <Test /> },
   ]);
 
   return routes;
