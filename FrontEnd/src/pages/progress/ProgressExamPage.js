@@ -1,10 +1,11 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-
+import { Link, useNavigate, useParams } from 'react-router-dom';
 // @mui
 import {
+  Modal,
+  TextField,
   Card,
   Table,
   Stack,
@@ -30,62 +31,19 @@ import Scrollbar from '../../components/scrollbar';
 // sections
 import { UserListToolbar } from '../../sections/@dashboard/user';
 // mock
+import studentApi from '../../services/StudentAPI';
 import courseAPI from '../../services/courseAPI';
-import { fDate } from '../../utils/formatTime';
+import { useAuth } from '../../context/AuthContext';
+import examAPI from '../../services/examAPI';
 
-
-// ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Gender', alignRight: false },
-  { id: 'role', label: 'Positon', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
-];
-
-// ----------------------------------------------------------------------
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array, comparator, query) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-  }
-  return stabilizedThis.map((el) => el[0]);
-}
-
-export default function StudentOfCoursePage() {
+export default function ExamPage() {
+  const {id} = useParams()
   const [open, setOpen] = useState(null);
-
+  const { userDTO} = useAuth();
   const [page, setPage] = useState(0);
 
-  const [order, setOrder] = useState('asc');
 
   const [selected, setSelected] = useState([]);
-
-  const [orderBy, setOrderBy] = useState('name');
 
   const [filterName, setFilterName] = useState('');
 
@@ -94,19 +52,50 @@ export default function StudentOfCoursePage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [students, setStudent] = useState([]);
-  const { id } = useParams();
-
+  const [exam, setExam] = useState([]);
   useEffect(() => {
     const fetchTeachers = async () => {
-      const data = await courseAPI.getStudents(id);
-      setStudent(data);
+      const data = await examAPI.getAll(id);
+      setExam(data);
     };
     fetchTeachers();
   }, []);
-
   const navigate = useNavigate()
-  
+
+  // new exam
+  const [openCourse, setOpenCourse] = useState(false);
+  const [examName, setExamName] = useState('');
+
+  const handleOpenCouse = () => {
+    setOpenCourse(true);
+  };
+
+  const handleClose = () => {
+    setOpenCourse(false);
+  };
+
+  const handleOk = async () =>  {
+    console.log(userDTO);
+    try {
+      const response = await examAPI.create({name : examName},id);
+      console.log(response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error("error create student", error);
+    }
+   
+  };
+
+  const handleCancel = () => {
+    // Xử lý logic khi nhấn nút Hủy bỏ
+    handleClose();
+  };
+
+  const handleChange = (event) => {
+    setExamName(event.target.value);
+    console.log(examName)
+  };
+  // end
   const handleOpenMenu = (event, id) => {
     setIdRow(id);
     setOpen(event.currentTarget);
@@ -130,32 +119,49 @@ export default function StudentOfCoursePage() {
     setFilterName(event.target.value);
   };
   const handleDelete = async (id) => {
-    // try {
-    //   const response = await studentApi.delete(id);
-    //   console.log(response.data);
-    // } catch (error) {
-    //   console.error(error);
-    // }
-
+    try {
+      const response = await examAPI.delete(id);
+      console.log(response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error(error);
+    }
+    const handleCompleteExam = async (id) => {
+      try {
+        // Gọi API để cập nhật trạng thái completed của bài thi
+        const response = await examAPI.update({ completed: true }, id);
+        console.log(response); // In ra kết quả từ API (tùy chỉnh cho phù hợp)
+        
+        // Cập nhật trạng thái completed của bài thi trong danh sách exams
+        const updatedExams = exam.map((exams) => {
+          if (exams.id === id) {
+            return { ...exam, completed: true };
+          }
+          return exam;
+        });
+        setExam(updatedExams);
+      } catch (error) {
+        console.error(error);
+      }
+    };
   }
   return (
     <>
       <Helmet>
-        <title> Student | Minimal UI </title>
+        <title> Exam | Minimal UI </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Course / List student
+           Course / Exam
           </Typography>
-          <Button onClick={handleNavigateNew} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            Add Student To Course
+          <Button onClick={handleOpenCouse} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+            New Exam
           </Button>
         </Stack>
 
         <Card>
-          <UserListToolbar numSelected={selected.length} filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -163,28 +169,34 @@ export default function StudentOfCoursePage() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="right">Id</TableCell>
-                    <TableCell align="right">Name</TableCell>
-                    <TableCell align="right">Birth Day</TableCell>
-                    <TableCell align="right">Action</TableCell>
+                    <TableCell align="right">Name Exam</TableCell>
+                    <TableCell align="right">Process</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
-                  {students.map((row) => (
+                  {exam.map((row) => (
                     <TableRow
                       key={row.id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
 
                       <TableCell align="right">{row.id}</TableCell>
-                      <TableCell align="right">{row.fullName}</TableCell>
-                      <TableCell align="right">{fDate(row.birthday)}</TableCell>
-                      <TableCell align="right" onClick={() => { console.log("delete") }}>
+                      <TableCell align="right"><Link to={`/dashboard/question/${row.id}`}>{row.name}</Link></TableCell>
+                      <TableCell align="right" >
 
                       <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, row.id)}>
                           <Iconify icon={'eva:more-vertical-fill'} />
                         </IconButton>
                        
                       </TableCell>
+                      <td>{exam.name}</td>
+      <td>
+        {exam.completed ? (
+          <button disabled>Đã hoàn thành</button>
+        ) : (
+          <button onClick={() => handleCompleteExam(exam.id)}>Chưa hoàn thành</button>
+        )}
+      </td>
                     </TableRow>
                   ))}
                 </TableBody>
@@ -195,7 +207,7 @@ export default function StudentOfCoursePage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={students.length}
+            count={exam.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -223,7 +235,7 @@ export default function StudentOfCoursePage() {
         }}
       >
         <MenuItem onClick={() => {
-                          navigate(`/dashboard/studentUpdate/${idRow}`)
+                          navigate(`/dashboard/progressUpdate/${idRow}`)
                         }} >
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
@@ -236,16 +248,27 @@ export default function StudentOfCoursePage() {
           Delete
         </MenuItem>
       </Popover>
-       {/* <Button onClick={() => {
-                          handleDelete(row.id)
-                        }} variant="outlined" color="error">
-                          Delete
-                        </Button>
-                        <Button onClick={() => {
-                          navigate(`/dashboard/studentUpdate/${row.id}`)
-                        }} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-                          Update
-                        </Button> */}
+      <Modal open={openCourse} onClose={handleClose}>
+        <div style={{ margin: 'auto', marginTop: 100, width: 300, backgroundColor: '#FFF', padding: 20 }}>
+          <TextField
+            label="Tên khóa học"
+            value={examName}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <div style={{ textAlign: 'right', marginTop: 10 }}>
+            {examName.length === 0 ? 
+           ""
+          :  <Button onClick={handleOk} color="primary" variant="contained" style={{ marginRight: 10 }}>
+          OK
+        </Button>}
+            <Button onClick={handleCancel} color="secondary" variant="contained">
+              Hủy bỏ
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

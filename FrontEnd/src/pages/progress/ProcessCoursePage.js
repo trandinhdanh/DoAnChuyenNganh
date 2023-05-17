@@ -1,11 +1,11 @@
-
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-
+import { Link,useParams, useNavigate } from 'react-router-dom';
 // @mui
 import {
+  Modal,
+  TextField,
   Card,
   Table,
   Stack,
@@ -32,61 +32,16 @@ import Scrollbar from '../../components/scrollbar';
 import { UserListToolbar } from '../../sections/@dashboard/user';
 // mock
 import studentApi from '../../services/StudentAPI';
-import { fDate } from '../../utils/formatTime';
+import courseAPI from '../../services/courseAPI';
+import { useAuth } from '../../context/AuthContext';
 
-
-// ----------------------------------------------------------------------
-
-const TABLE_HEAD = [
-  { id: 'name', label: 'Name', alignRight: false },
-  { id: 'company', label: 'Gender', alignRight: false },
-  { id: 'role', label: 'Positon', alignRight: false },
-  { id: 'isVerified', label: 'Verified', alignRight: false },
-  { id: 'status', label: 'Status', alignRight: false },
-  { id: '' },
-];
-
-// ----------------------------------------------------------------------
-
-function descendingComparator(a, b, orderBy) {
-  if (b[orderBy] < a[orderBy]) {
-    return -1;
-  }
-  if (b[orderBy] > a[orderBy]) {
-    return 1;
-  }
-  return 0;
-}
-
-function getComparator(order, orderBy) {
-  return order === 'desc'
-    ? (a, b) => descendingComparator(a, b, orderBy)
-    : (a, b) => -descendingComparator(a, b, orderBy);
-}
-
-function applySortFilter(array, comparator, query) {
-  const stabilizedThis = array.map((el, index) => [el, index]);
-  stabilizedThis.sort((a, b) => {
-    const order = comparator(a[0], b[0]);
-    if (order !== 0) return order;
-    return a[1] - b[1];
-  });
-  if (query) {
-    return filter(array, (_user) => _user.name.toLowerCase().indexOf(query.toLowerCase()) !== -1);
-  }
-  return stabilizedThis.map((el) => el[0]);
-}
-
-export default function StudentPage() {
+export default function ProgressCoursePage() {
   const [open, setOpen] = useState(null);
-
+  const { userDTO} = useAuth();
   const [page, setPage] = useState(0);
 
-  const [order, setOrder] = useState('asc');
 
   const [selected, setSelected] = useState([]);
-
-  const [orderBy, setOrderBy] = useState('name');
 
   const [filterName, setFilterName] = useState('');
 
@@ -95,20 +50,53 @@ export default function StudentPage() {
 
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
-  const [students, setStudent] = useState([]);
-  
+  const [course, setCourse] = useState([]);
+  const { id } = useParams();
   useEffect(() => {
-    const fetchTeachers = async () => {
-      const data = await studentApi.getAll();
-      setStudent(data);
+    const fetchCourse = async () => {
+      const data = await courseAPI.getCourse(id);
+    
+      setCourse(data);
     };
-    fetchTeachers();
+    fetchCourse();
   }, []);
 
   const navigate = useNavigate()
-  const handleNavigateNew = () => {
-    navigate('/dashboard/studentNew')
-  }
+
+  // new course
+  const [openCourse, setOpenCourse] = useState(false);
+  const [courseName, setCourseName] = useState('');
+
+  const handleOpenCouse = () => {
+    setOpenCourse(true);
+  };
+
+  const handleClose = () => {
+    setOpenCourse(false);
+  };
+
+  const handleOk = async () =>  {
+    console.log(userDTO);
+    try {
+      const response = await courseAPI.create({name : courseName},localStorage.getItem("user"));
+      console.log(response.data);
+      window.location.reload();
+    } catch (error) {
+      console.error("error create student", error);
+    }
+   
+  };
+
+  const handleCancel = () => {
+    // Xử lý logic khi nhấn nút Hủy bỏ
+    handleClose();
+  };
+
+  const handleChange = (event) => {
+    setCourseName(event.target.value);
+    console.log(courseName)
+  };
+  // end
   const handleOpenMenu = (event, id) => {
     setIdRow(id);
     setOpen(event.currentTarget);
@@ -133,8 +121,9 @@ export default function StudentPage() {
   };
   const handleDelete = async (id) => {
     try {
-      const response = await studentApi.delete(id);
+      const response = await courseAPI.delete(id);
       console.log(response.data);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -143,16 +132,16 @@ export default function StudentPage() {
   return (
     <>
       <Helmet>
-        <title> Student | Minimal UI </title>
+        <title> Course | Minimal UI </title>
       </Helmet>
 
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Student
+            Course List
           </Typography>
-          <Button onClick={handleNavigateNew} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Student
+          <Button onClick={handleOpenCouse} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
+            New Course
           </Button>
         </Stack>
 
@@ -165,31 +154,10 @@ export default function StudentPage() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="right">Id</TableCell>
-                    <TableCell align="right">Name</TableCell>
-                    <TableCell align="right">Birth Day</TableCell>
+                    <TableCell align="right">Name Course</TableCell>
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
                 </TableHead>
-                <TableBody>
-                  {students.map((row) => (
-                    <TableRow
-                      key={row.id}
-                      sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
-                    >
-
-                      <TableCell align="right">{row.id}</TableCell>
-                      <TableCell align="right">{row.fullName}</TableCell>
-                      <TableCell align="right">{fDate(row.birthday)}</TableCell>
-                      <TableCell align="right" onClick={() => { console.log("delete") }}>
-
-                      <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, row.id)}>
-                          <Iconify icon={'eva:more-vertical-fill'} />
-                        </IconButton>
-                       
-                      </TableCell>
-                    </TableRow>
-                  ))}
-                </TableBody>
               </Table>
             </TableContainer>
           </Scrollbar>
@@ -197,7 +165,7 @@ export default function StudentPage() {
           <TablePagination
             rowsPerPageOptions={[5, 10, 25]}
             component="div"
-            count={students.length}
+            count={course.length}
             rowsPerPage={rowsPerPage}
             page={page}
             onPageChange={handleChangePage}
@@ -225,7 +193,7 @@ export default function StudentPage() {
         }}
       >
         <MenuItem onClick={() => {
-                          navigate(`/dashboard/studentUpdate/${idRow}`)
+                          navigate(`/dashboard/courseProcessUpdate/${idRow}`)
                         }} >
           <Iconify icon={'eva:edit-fill'} sx={{ mr: 2 }} />
           Edit
@@ -238,16 +206,27 @@ export default function StudentPage() {
           Delete
         </MenuItem>
       </Popover>
-       {/* <Button onClick={() => {
-                          handleDelete(row.id)
-                        }} variant="outlined" color="error">
-                          Delete
-                        </Button>
-                        <Button onClick={() => {
-                          navigate(`/dashboard/studentUpdate/${row.id}`)
-                        }} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-                          Update
-                        </Button> */}
+      <Modal open={openCourse} onClose={handleClose}>
+        <div style={{ margin: 'auto', marginTop: 100, width: 300, backgroundColor: '#FFF', padding: 20 }}>
+          <TextField
+            label="Tên khóa học"
+            value={courseName}
+            onChange={handleChange}
+            fullWidth
+            margin="normal"
+          />
+          <div style={{ textAlign: 'right', marginTop: 10 }}>
+            {courseName.length === 0 ? 
+           ""
+          :  <Button onClick={handleOk} color="primary" variant="contained" style={{ marginRight: 10 }}>
+          OK
+        </Button>}
+            <Button onClick={handleCancel} color="secondary" variant="contained">
+              Hủy bỏ
+            </Button>
+          </div>
+        </div>
+      </Modal>
     </>
   );
 }

@@ -22,7 +22,10 @@ public class CourseEntity {
     @ManyToOne
     @JoinColumn(name = "teacher_id")
     private TeacherEntity teacher;
+
     @ManyToMany(fetch = FetchType.EAGER)
     @JoinTable(name = "course_student", joinColumns = @JoinColumn(name = "course_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
     private List<StudentEntity> students = new ArrayList<>();
+
+
 }

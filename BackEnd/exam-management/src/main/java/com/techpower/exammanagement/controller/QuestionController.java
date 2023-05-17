@@ -46,4 +46,8 @@ public class QuestionController {
     public List<QuestionDTO> getQuestionsByExam(@PathVariable long idExam) {
         return iQuestionService.getQuestionsByExam(idExam);
     }
+    @GetMapping("/question/{id}/answer")
+    public boolean isAnswer(@PathVariable long id) {
+        return iQuestionService.isAnswered(id);
+    }
 }
