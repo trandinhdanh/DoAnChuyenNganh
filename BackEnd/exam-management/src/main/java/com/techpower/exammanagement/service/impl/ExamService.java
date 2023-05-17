@@ -1,7 +1,13 @@
 package com.techpower.exammanagement.service.impl;
 
+import com.techpower.exammanagement.controller.output.ExamOutput;
+import com.techpower.exammanagement.converter.AnswerConverter;
 import com.techpower.exammanagement.converter.ExamConverter;
+import com.techpower.exammanagement.converter.QuestionConverter;
+import com.techpower.exammanagement.dto.AnswerDTO;
 import com.techpower.exammanagement.dto.ExamDTO;
+import com.techpower.exammanagement.dto.QuestionDTO;
+import com.techpower.exammanagement.entity.AnswerEntity;
 import com.techpower.exammanagement.entity.CourseEntity;
 import com.techpower.exammanagement.entity.ExamEntity;
 import com.techpower.exammanagement.entity.QuestionEntity;
@@ -10,6 +16,7 @@ import com.techpower.exammanagement.repository.CourseRepository;
 import com.techpower.exammanagement.repository.ExamRepository;
 import com.techpower.exammanagement.repository.QuestionRepository;
 import com.techpower.exammanagement.service.IExamService;
+import com.techpower.exammanagement.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +36,10 @@ public class ExamService implements IExamService {
     private QuestionRepository questionRepository;
     @Autowired
     private AnswerRepository answerRepository;
+    @Autowired
+    private QuestionConverter questionConverter;
+    @Autowired
+    private AnswerConverter answerConverter;
 
     @Override
     public List<ExamDTO> getAll() {
@@ -40,8 +51,26 @@ public class ExamService implements IExamService {
     }
 
     @Override
-    public ExamDTO getDetail(long id) {
-        return examConverter.toDTO(examRepository.findOneById(id));
+    public ExamOutput getDetail(long id) {
+        ExamOutput result = new ExamOutput();
+        ExamEntity examEntity = examRepository.findOneById(id);
+        ExamDTO examDTO = examConverter.toDTO(examEntity);
+        result.setExam(examDTO);
+
+        List<QuestionDTO> questionDTOS = new ArrayList<>();
+        List<QuestionEntity> questionEntities = questionRepository.findAllByExam(examEntity);
+        for (QuestionEntity question : questionEntities) {
+            List<AnswerDTO> answerDTOS = new ArrayList<>();
+            List<AnswerEntity> answerEntities = answerRepository.findAllByQuestion(question);
+            for (AnswerEntity answer : answerEntities) {
+                answerDTOS.add(answerConverter.toDTO(answer));
+            }
+            QuestionDTO questionDTO = questionConverter.toDTO(question);
+            questionDTO.setAnswers(answerDTOS);
+            questionDTOS.add(questionDTO);
+        }
+        result.setQuestions(questionDTOS);
+        return result;
     }
 
     @Override
