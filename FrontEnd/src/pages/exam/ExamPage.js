@@ -128,6 +128,8 @@ export default function ExamPage() {
     }
 
   }
+  
+
   return (
     <>
       <Helmet>
@@ -154,6 +156,7 @@ export default function ExamPage() {
                     <TableCell align="right">Id</TableCell>
                     <TableCell align="right">Name Exam</TableCell>
                     <TableCell align="right">Action</TableCell>
+                    <TableCell align="right">Process</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>
@@ -172,7 +175,10 @@ export default function ExamPage() {
                         </IconButton>
                        
                       </TableCell>
+                     
+
                     </TableRow>
+                    
                   ))}
                 </TableBody>
               </Table>

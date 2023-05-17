@@ -106,9 +106,7 @@ export default function StudentOfCoursePage() {
   }, []);
 
   const navigate = useNavigate()
-  const handleNavigateNew = () => {
-    navigate(`/dashboard/course/${id}/add`)
-  }
+  
   const handleOpenMenu = (event, id) => {
     setIdRow(id);
     setOpen(event.currentTarget);
