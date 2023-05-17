@@ -107,4 +107,5 @@ public class ExamService implements IExamService {
         List<ExamEntity> exams = examRepository.findAllByCourse(course);
         return examConverter.toDTOs(exams);
     }
+
 }

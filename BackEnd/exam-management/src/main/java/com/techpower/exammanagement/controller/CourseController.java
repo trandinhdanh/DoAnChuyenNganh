@@ -52,4 +52,9 @@ public class CourseController {
         iCourseService.remove(id);
         return ResponseEntity.ok().build();
     }
+    @GetMapping("/course/student/{idStudent}")
+    public List<CourseDTO>  getCourseByStudent(@PathVariable long idStudent) {
+        return iCourseService.getCourseByStudent(idStudent);
+    }
+
 }

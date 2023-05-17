@@ -31,4 +31,5 @@ public class StudentEntity {
     private User user;
     @ManyToMany(mappedBy = "students")//mappedBy là cái tên danh sách role bên user
     private List<CourseEntity> courses = new ArrayList<>();
+
 }
