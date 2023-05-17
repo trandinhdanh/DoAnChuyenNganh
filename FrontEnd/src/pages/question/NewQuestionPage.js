@@ -1,13 +1,12 @@
 import React, { useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { Button, Stack, Container, TextField, FormControlLabel, RadioGroup, Radio } from '@mui/material';
+import { Button, Dialog, DialogTitle, DialogContent, DialogActions, TextField, RadioGroup, FormControlLabel, Radio, Stack, Container } from '@mui/material';
 import questionAPI from '../../services/questionAPI';
 
 export default function NewQuestionPage() {
-  const { id } = useParams();
+  const {id} = useParams()
   const [questionState, setQuestionState] = useState('');
   const [answers, setAnswers] = useState([]);
-  const [selectedAnswer, setSelectedAnswer] = useState(-1);
 
   const handleAddAnswer = () => {
     setAnswers((prevAnswers) => [...prevAnswers, { answer: '', isCorrect: false }]);
@@ -21,72 +20,62 @@ export default function NewQuestionPage() {
     });
   };
 
-  const handleIsCorrectChange = (index) => {
+  const handleIsCorrectChange = (index, value) => {
     setAnswers((prevAnswers) => {
-      const updatedAnswers = prevAnswers.map((answer, i) => ({
-        ...answer,
-        isCorrect: i === index,
-      }));
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[index].isCorrect = value;
       return updatedAnswers;
     });
-    setSelectedAnswer(index);
   };
 
   const handleSendQuestion = async () => {
-    const formattedAnswers = answers.map((answer, index) => ({
-      answer: answer.answer,
-      correctAnswer: index === selectedAnswer ? 1 : 0,
-    }));
-
     const questionData = {
       question: questionState,
-      answers: formattedAnswers,
+      answers: answers.map((answer) => ({ [answer.answer]: answer.isCorrect })),
     };
-
+    
     try {
-      const response = await questionAPI.create(id, questionData);
+      const response = await questionAPI.create(id,questionData);
       console.log(response.data);
-      // window.location.reload();
+    //   window.location.reload();
     } catch (error) {
-      console.error('error create question', error);
+      console.error("error create question", error);
     }
-
+   
+    // Gửi request API tại đây với dữ liệu questionData
     console.log(questionData);
   };
 
   return (
     <Container>
       <Stack spacing={2}>
-        <TextField
-          fullWidth
-          label="Enter Question"
-          value={questionState}
-          onChange={(e) => setQuestionState(e.target.value)}
-        />
+        <TextField fullWidth label="Enter Question" value={questionState} onChange={(e) => setQuestionState(e.target.value)} />
 
-        <RadioGroup value={selectedAnswer.toString()} onChange={(e) => handleIsCorrectChange(parseInt(e.target.value, 10))}>
-          {answers.map((answer, index) => (
-            <Stack key={index} spacing={2} direction="row" sx={{ marginTop: '8px', marginBottom: '8px' }}>
-              <TextField
-                fullWidth
-                label={`Enter Answer ${index + 1}`}
-                value={answer.answer}
-                onChange={(e) => handleAnswerChange(index, e.target.value)}
-              />
-              <FormControlLabel
-                value={index.toString()}
-                control={<Radio />}
-                label="Is correct?"
-              />
-            </Stack>
-          ))}
-        </RadioGroup>
+        {answers.map((answer, index) => (
+          <Stack key={index} spacing={2} direction="row">
+            <TextField
+              fullWidth
+              label={`Enter Answer ${index + 1}`}
+              value={answer.answer}
+              onChange={(e) => handleAnswerChange(index, e.target.value)}
+            />
+            <FormControlLabel
+              control={
+                <Radio
+                  checked={answer.isCorrect}
+                  onChange={(e) => handleIsCorrectChange(index, e.target.checked)}
+                />
+              }
+              label="Is correct?"
+            />
+          </Stack>
+        ))}
 
-        <Button sx={{ width: '200px' }} variant="contained" onClick={handleAddAnswer}>
+        <Button sx={{width:'200px'}} variant="contained" onClick={handleAddAnswer}>
           Add Answer
         </Button>
 
-        <Button sx={{ width: '200px' }} variant="contained" onClick={handleSendQuestion}>
+        <Button sx={{width:'200px'}}  variant="contained" onClick={handleSendQuestion}>
           Send Question
         </Button>
       </Stack>

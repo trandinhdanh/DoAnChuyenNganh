@@ -1,5 +1,4 @@
 package com.techpower.exammanagement.controller;
-import com.techpower.exammanagement.controller.output.ExamOutput;
 import com.techpower.exammanagement.dto.ExamDTO;
 import com.techpower.exammanagement.service.IExamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,7 +20,7 @@ public class ExamController {
     }
 
     @GetMapping("/exam/{id}")
-    public ExamOutput getDetail(@PathVariable long id) {
+    public ExamDTO getDetail(@PathVariable long id) {
         return iExamService.getDetail(id);
     }
 

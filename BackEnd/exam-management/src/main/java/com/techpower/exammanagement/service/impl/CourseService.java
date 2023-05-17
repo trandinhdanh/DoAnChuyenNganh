@@ -49,6 +49,8 @@ public class CourseService implements ICourseService {
         return courseConverter.toDTO(courseRepository.findOneById(id));
     }
 
+
+
     @Override
     public CourseDTO save(CourseDTO dto, long idUser) {
         CourseEntity courseEntity = courseConverter.toEntity(dto);
@@ -80,18 +82,32 @@ public class CourseService implements ICourseService {
             courseRepository.deleteById(id);
         }
     }
+    @Override
+    public List<StudentDTO> getStudentsByCourse(long idCourse) {
+        CourseEntity courseEntity = courseRepository.findOneById(idCourse);
+        List<StudentEntity> students = courseEntity.getStudents();
+        List<StudentDTO> studentDTOS = new ArrayList<>();
+        for (StudentEntity studentEntity : students) {
+            studentDTOS.add(studentConverter.toDTO(studentEntity));
+        }
+        return studentDTOS;
+    }
 
     @Override
     @Transactional
-    public CourseDTO addStudentToCourse(long idCourse, long idUser) {
+    public CourseDTO addStudentToCourse(long idCourse, List<Long> idStudents) {
         CourseEntity courseEntity = courseRepository.findOneById(idCourse);
 
-        List<StudentEntity> students = new ArrayList<>();
+        List<StudentEntity> students = courseEntity.getStudents();
         List<StudentDTO> studentDTOS = new ArrayList<>();
-        StudentEntity studentEntity = studentRepository.findOneByUser(userRepository.findOneById(idUser));
-        students.add(studentEntity);
-        studentDTOS.add(studentConverter.toDTO(studentEntity));
+        idStudents.forEach(id -> {
+            if (studentRepository.existsById(id)) {
+                students.add( studentRepository.findOneById(id));
+            }
+        });
 
+//        studentDTOS.add(studentConverter.toDTO(studentEntity));
+       students.forEach(studentEntity -> studentDTOS.add(studentConverter.toDTO(studentEntity)));
         courseEntity.setStudents(students);
         CourseDTO result = courseConverter.toDTO(courseRepository.save(courseEntity));
         result.setStudents(studentDTOS);

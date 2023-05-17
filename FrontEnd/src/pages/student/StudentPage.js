@@ -95,6 +95,7 @@ export default function StudentPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [students, setStudent] = useState([]);
+  
   useEffect(() => {
     const fetchTeachers = async () => {
       const data = await studentApi.getAll();
@@ -102,6 +103,7 @@ export default function StudentPage() {
     };
     fetchTeachers();
   }, []);
+
   const navigate = useNavigate()
   const handleNavigateNew = () => {
     navigate('/dashboard/studentNew')

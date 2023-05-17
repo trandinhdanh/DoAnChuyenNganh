@@ -4,7 +4,6 @@ import { Helmet } from 'react-helmet-async';
 import { useParams, useNavigate } from 'react-router-dom';
 import Iconify from '../../components/iconify/Iconify';
 import questionAPI from '../../services/questionAPI';
-import examAPI from '../../services/examAPI';
 
 export default function QuestionPage() {
   const { id } = useParams();
@@ -23,46 +22,41 @@ export default function QuestionPage() {
     //     id: 1,
     //     question: 'Đây là câu hỏi 1?',
     //     answers: [
-    //       { id: 1, answer: '2', correctAnswer: false },
-    //       { id: 2, answer: '3', correctAnswer: true },
-    //       { id: 3, answer: '4', correctAnswer: false },
-    //       { id: 4, answer: '5', correctAnswer: false },
+    //       { id: 1, answer: '2', correct: false },
+    //       { id: 2, answer: '3', correct: true },
+    //       { id: 3, answer: '4', correct: false },
+    //       { id: 4, answer: '5', correct: false },
     //     ],
     //   },
     //   {
     //     id: 2,
     //     question: 'Đây là câu hỏi 2?',
     //     answers: [
-    //       { id: 5, answer: '2', correctAnswer: false },
-    //       { id: 6, answer: '3', correctAnswer: false },
-    //       { id: 7, answer: '4', correctAnswer: true },
-    //       { id: 8, answer: '5', correctAnswer: false },
+    //       { id: 5, answer: '2', correct: false },
+    //       { id: 6, answer: '3', correct: false },
+    //       { id: 7, answer: '4', correct: true },
+    //       { id: 8, answer: '5', correct: false },
     //     ],
     //   },
     //   // Thêm các câu hỏi khác tại đây
     // ];
     // setQuestions(sampleQuestions)
     const fetchQuestion = async () => {
-        const response = await examAPI.getById(id);
-        setQuestions(response.questions);
-        console.log(response)
+        const response = await questionAPI.getAll();
+        setQuestions(response.data);
       };
       fetchQuestion();
   }, []);
 
 
 
-  const handleEditQuestion = (id) => {
-    navigate(`/dashboard/questionUpdate/${id}`)
+  const handleEditQuestion = (question) => {
+
   };
 
-  const handleDeleteQuestion = async (id) => {
-    try {
-      const response = await questionAPI.delete(id);
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-    }
+  const handleDeleteQuestion = (question) => {
+    // const updatedQuestions = questions.filter((q) => q.id !== question.id);
+    // setQuestions(updatedQuestions);
   };
 
 
@@ -82,9 +76,9 @@ export default function QuestionPage() {
           </Button>
         </Stack>
       <List>
-        {questions?.map((question,index) => (
+        {questions?.map((question) => (
              <ListItem key={question.id} sx={{ border: '1px solid', borderRadius: '4px', my: 2 }}>
-             <ListItemText primary={`${index + 1}. ${question.question}`} />
+             <ListItemText primary={`${question.id}. ${question.question}`} />
              <FormControl component="fieldset">
                <RadioGroup>
                     {question.answers.map((answer, index) => (
@@ -95,15 +89,15 @@ export default function QuestionPage() {
                         label={`${String.fromCharCode(65 + index)}. ${answer.answer}`}
                         disabled
                         sx={{
-                            color: answer.correctAnswer ? 'green' : 'inherit',
+                            color: answer.correct ? 'green' : 'inherit',
                         }}
-                        checked={answer.correctAnswer} // Kiểm tra câu trả lời đúng
+                        checked={answer.correct} // Kiểm tra câu trả lời đúng
                         />
                     ))}
                 </RadioGroup>
              </FormControl>
-             <Button variant="outlined" onClick={() => handleEditQuestion(question.id)}>Edit</Button>
-             <Button variant="outlined" onClick={() => handleDeleteQuestion(question.id)}>Delete</Button>
+             <Button variant="outlined" onClick={() => handleEditQuestion(question)}>Edit</Button>
+             <Button variant="outlined" onClick={() => handleDeleteQuestion(question)}>Delete</Button>
            </ListItem>
          ))}
        </List>

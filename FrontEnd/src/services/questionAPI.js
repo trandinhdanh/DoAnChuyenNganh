@@ -15,7 +15,7 @@ const questionAPI = {
   },
 
   getById: async (id) => {
-    const response = await axios.get(`${BASE_URL}/api/v1/question/${id}`, getAuthConfig());
+    const response = await axios.get(`${BASE_URL}/api/v1/exam/${id}`, getAuthConfig());
     return response.data;
   },
   getByIdExam: async (id) => {
@@ -29,8 +29,8 @@ const questionAPI = {
 });
     return response.data;
   },
-  update: async ( id,question) => {
-    const response = await axios.put(`${BASE_URL}/api/v1/question/${id}`, question,  {
+  update: async ( exam,id) => {
+    const response = await axios.put(`${BASE_URL}/api/v1/exam/${id}`, exam,  {
       ...getAuthConfig(),
       'Content-Type': 'multipart/form-data'
 });
@@ -38,7 +38,7 @@ const questionAPI = {
   },
 
   delete: async (id) => {
-    const response = await axios.delete(`${BASE_URL}/api/v1/question/${id}`, getAuthConfig());
+    const response = await axios.delete(`${BASE_URL}/api/v1/exam/${id}`, getAuthConfig());
     return response.data;
   }
 };
