@@ -54,6 +54,11 @@ const navConfigStudent = [
   path: '/dashboard/progress',
   icon: icon('ic_blog'),
 },
+  {
+    title: 'list exam',
+    path: '/dashboard/list-exam',
+    icon: icon('ic_blog'),
+  },
 ];
 export {navConfigAdmin,navConfigTeacher,navConfigStudent};
 

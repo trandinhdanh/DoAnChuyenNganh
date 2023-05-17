@@ -26,14 +26,9 @@ import QuestionPage from './pages/question/QuestionPage';
 import NewQuestionPage from './pages/question/NewQuestionPage';
 import UpdateQuestionPage from './pages/question/UpdateQuestionPage';
 import MyExam from './pages/MyExam';
-
-
+import ListExam from "./pages/ListExam";
 
 // // ----------------------------------------------------------------------
-
-
-
-
 
 export default function Router() {
 
@@ -105,6 +100,7 @@ export default function Router() {
         { path: "products", element: <ProductsPage /> },
         { path: "blog", element: <BlogPage /> },
         { path: "progress", element: <ProgressExamPage /> },
+        { path: "list-exam", element: <ListExam /> },
         { path: "mycourse/:id", element: <MyExam /> },
       ],
     },
