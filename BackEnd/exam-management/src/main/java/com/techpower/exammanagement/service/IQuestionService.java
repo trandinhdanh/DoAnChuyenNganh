@@ -12,4 +12,8 @@ public interface IQuestionService {
 
     void remove(long id);
     List<QuestionDTO> getQuestionsByExam(long idExam);
+
+    boolean isAnswered(long id);
+
+
 }

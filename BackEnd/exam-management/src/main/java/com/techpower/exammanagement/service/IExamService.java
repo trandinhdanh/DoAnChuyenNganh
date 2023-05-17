@@ -15,5 +15,5 @@ public interface IExamService {
 
     void remove(long id);
     List<ExamDTO> getExamsByCourse(long idCourse);
-
+    boolean isExamCompleted(Long examId);
 }

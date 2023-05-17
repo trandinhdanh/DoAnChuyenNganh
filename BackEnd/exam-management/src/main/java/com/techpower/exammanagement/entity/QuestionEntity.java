@@ -12,6 +12,9 @@ import java.util.List;
 @Getter
 @Setter
 public class QuestionEntity {
+
+
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -22,4 +25,5 @@ public class QuestionEntity {
     @ManyToOne
     @JoinColumn(name = "exam_id")
     private ExamEntity exam;
+
 }

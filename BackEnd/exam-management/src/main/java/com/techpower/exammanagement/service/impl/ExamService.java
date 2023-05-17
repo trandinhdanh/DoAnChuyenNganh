@@ -40,7 +40,8 @@ public class ExamService implements IExamService {
     private QuestionConverter questionConverter;
     @Autowired
     private AnswerConverter answerConverter;
-
+    @Autowired
+    private QuestionService questionService;
     @Override
     public List<ExamDTO> getAll() {
         List<ExamDTO> result = new ArrayList<>();
@@ -107,5 +108,23 @@ public class ExamService implements IExamService {
         List<ExamEntity> exams = examRepository.findAllByCourse(course);
         return examConverter.toDTOs(exams);
     }
+//    public boolean isExamCompleted(Long examId) {
+//        ExamEntity examEntity = examRepository.findOneById(examId);
+//        for (QuestionEntity question : examEntity.getQuestions()) {
+//            if (question.getAnswer().isEmpty()) {
+//                return false;
+//            }
+//        }
+//
+//        return true;
+public boolean isExamCompleted(Long examId) {
+        ExamEntity examEntity = examRepository.findOneById(examId);
+        for (QuestionEntity question : examEntity.getQuestions()) {
+            if (!questionService.isAnswered(question.getId())) {
+                return false;
+            }
+        }
 
-}
+        return true;
+
+}}

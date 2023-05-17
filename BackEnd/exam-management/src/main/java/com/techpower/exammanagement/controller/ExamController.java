@@ -47,4 +47,8 @@ public class ExamController {
     public List<ExamDTO> getExamsByCourse(@PathVariable long idCourse) {
         return iExamService.getExamsByCourse(idCourse);
     }
+    @GetMapping("/exam/{examId}/completed")
+    public ResponseEntity<Boolean> isExamCompleted(@PathVariable Long examId) {
+        return ResponseEntity.ok(iExamService.isExamCompleted(examId));
+    }
 }
