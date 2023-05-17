@@ -24,22 +24,69 @@ function Test() {
   return (
     <div>
       {content ? (
-        <div className="test-container">
-          <div className="test-title">
-            <h1>Bài thi: Chuyên đề Java</h1>
+        <div className="test-container" style={{ paddingBottom: '30px' }}>
+          <div
+            className="test-title"
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+              marginTop: '20px',
+            }}
+          >
+            <div
+              style={{
+                display: 'flex',
+                justifyContent: 'center',
+                flexDirection: 'column',
+                alignItems: 'center',
+                textAlign: 'center',
+                backgroundColor: '#efefef',
+                minWidth: '500px',
+                height: '220px',
+                borderRadius: '20px',
+              }}
+            >
+              <h1>Bài thi: Chuyên đề Java</h1>
+              <h3 style={{ margin: 0 }}>Thời gian làm bài: 90p</h3>
+            </div>
           </div>
-          {quizzItems.map((quizz) => {
-            return <Question id={quizz.id} question={quizz.question} answers={quizz.answers} />;
-          })}
+          <div className="question-answer" style={{ margin: '50px' }}>
+            {quizzItems.map((quizz, index) => {
+              return <Question index={index} id={quizz.id} question={quizz.question} answers={quizz.answers} />;
+            })}
+          </div>
 
-          <Button onClick={handleSumit} variant="contained">
-            Nộp bài
-          </Button>
+          <div className="submit" style={{ display: 'flex', justifyContent: 'center' }}>
+            <Button onClick={handleSumit} variant="contained">
+              Nộp bài
+            </Button>
+          </div>
         </div>
       ) : (
-        <div>
-          <div>Bạn giỏi quá Kết quả của bạn là : {count}</div>
-          <Button variant="contained">Quay lại trang chủ</Button>
+        <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+          <div
+            className="result"
+            style={{
+              display: 'flex',
+              justifyContent: 'center',
+              flexDirection: 'column',
+              alignItems: 'center',
+              textAlign: 'center',
+              height: '300px',
+              width: '600px',
+              border: '0.5px solid #dfdfdf',
+              borderRadius: '8px',
+              backgroundColor: '#efefef',
+            }}
+          >
+            <h2>Bài thi môn: Java</h2>
+            <h4 style={{ margin: '0' }}>Thời gian: 90p</h4>
+            <div style={{ margin: '15px 0' }}>Kết quả của bạn là : {(10 / data.length) * count}</div>
+            <Button variant="contained">Quay lại trang chủ</Button>
+          </div>
         </div>
       )}
     </div>

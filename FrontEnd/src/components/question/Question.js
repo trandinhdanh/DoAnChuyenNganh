@@ -1,9 +1,10 @@
 // eslint-disable-next-line import/no-unresolved
 import { data } from 'src/pages/Test';
 
-function Question({ id, question, answers }) {
+function Question({ index, id, question, answers }) {
   const handlePoint = (isCorrect) => {
-    data[id - 1] = isCorrect;
+    data[index] = isCorrect;
+    console.log(index);
   };
   return (
     <div className="container">
