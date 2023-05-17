@@ -53,17 +53,16 @@ public class ExamResultService implements IExamResultService {
     }
 
     @Override
-    public ExamResultDTO save(ExamResultDTO dto, long idExam, long idStudent) {
+    public ExamResultDTO save(ExamDTO dto, long idStudent) {
         int wAnswer = 0;
         int rAnswer = 0;
-        ExamResultEntity examResultEntity = examResutConverter.toEntity(dto);
-        ExamEntity examEntity = examRepository.findOneById(idExam);
+        ExamResultEntity examResultEntity = new ExamResultEntity();
+        ExamEntity examEntity = examRepository.findOneById(dto.getId());
         StudentEntity studentEntity = studentRepository.findOneById(idStudent);
-        List<QuestionEntity> listQuestion = examEntity.getQuestions();
+        List<QuestionEntity> listQuestion = dto.getQuestions();
         for(QuestionEntity question : listQuestion){
             List<AnswerEntity> listAnswer = question.getAnswer();
             for(AnswerEntity answer : listAnswer){
-                AnswerDTO answerDTO = answerConverter.toDTO(answerRepository.findOneById(answer.getId()));
                 if(answer.isCorrectAnswer() == true){
                     rAnswer += 1;
                 } else {
