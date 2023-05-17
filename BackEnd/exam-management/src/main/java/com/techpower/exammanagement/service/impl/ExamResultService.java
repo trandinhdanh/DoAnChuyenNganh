@@ -52,31 +52,16 @@ public class ExamResultService implements IExamResultService {
         return examResutConverter.toDTO(examResultRepository.findOneById(id));
     }
 
-    @Override
-    public ExamResultDTO save(ExamDTO dto, long idStudent) {
-        int wAnswer = 0;
-        int rAnswer = 0;
-        ExamResultEntity examResultEntity = new ExamResultEntity();
-        ExamEntity examEntity = examRepository.findOneById(dto.getId());
-        StudentEntity studentEntity = studentRepository.findOneById(idStudent);
-        List<QuestionEntity> listQuestion = dto.getQuestions();
-        for(QuestionEntity question : listQuestion){
-            List<AnswerEntity> listAnswer = question.getAnswer();
-            for(AnswerEntity answer : listAnswer){
-                if(answer.isCorrectAnswer() == true){
-                    rAnswer += 1;
-                } else {
-                    wAnswer += 1;
-                }
-            }
 
-        }
-        examResultEntity.setName(examEntity.getName());
-        examResultEntity.setExam(examEntity);
+    @Override
+    public ExamResultDTO save(double score, long idStudent, long idExam) {
+        ExamResultEntity examResultEntity = new ExamResultEntity();
+        StudentEntity studentEntity = studentRepository.findOneById(idStudent);
+        ExamEntity examEntity = examRepository.findOneById(idExam);
         examResultEntity.setStudent(studentEntity);
-        examResultEntity.setRightAnswer(rAnswer);
-        examResultEntity.setWrongAnswer(wAnswer);
-        examResultEntity.setScore(rAnswer * 10/listQuestion.size());
+        examResultEntity.setExam(examEntity);
+        examResultEntity.setName(examEntity.getName());
+        examResultEntity.setScore(score);
         return examResutConverter.toDTO(examResultRepository.save(examResultEntity));
     }
 

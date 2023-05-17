@@ -8,7 +8,5 @@ import lombok.Setter;
 public class ExamResultDTO {
     private long id;
     private String name;
-    private int wrongAnswer;
-    private int rightAnswer;
     private double score;
 }

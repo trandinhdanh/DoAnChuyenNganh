@@ -30,9 +30,11 @@ public class ExamResutController {
         return iExamResultService.getDetail(id);
     }
 
-    @PostMapping("/exam_result/{idStudent}")
-    public ExamResultDTO save(@RequestBody ExamDTO dto, @PathVariable long idStudent) {
-        return iExamResultService.save(dto, idStudent);
+    @PostMapping("/exam_result")
+    public ExamResultDTO save(@RequestParam("score") double score,
+                              @RequestParam("student") long idStudent,
+                              @RequestParam("exam") long idExam) {
+        return iExamResultService.save(score, idStudent, idExam);
     }
     @PutMapping("/exam_result/{id}")
     public ExamResultDTO update(@PathVariable long id, @RequestBody ExamResultDTO dto) {

@@ -8,7 +8,7 @@ import java.util.List;
 public interface IExamResultService {
     List<ExamResultDTO> getAll();
     ExamResultDTO getDetail(long id);
-    ExamResultDTO save(ExamDTO dto, long idStudent);
+    ExamResultDTO save(double score, long idStudent, long idExam);
     ExamResultDTO update(ExamResultDTO dto);
 
     void remove(long id);

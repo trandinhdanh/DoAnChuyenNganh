@@ -18,10 +18,6 @@ public class ExamResultEntity {
     @Column
     private String name;
     @Column
-    private int wrongAnswer;
-    @Column
-    private int rightAnswer;
-    @Column
     private double score;
     @ManyToOne
     @JoinColumn(name = "exam_id")
