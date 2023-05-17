@@ -152,6 +152,7 @@ export default function CoursePage() {
                   <TableRow>
                     <TableCell align="right">Id</TableCell>
                     <TableCell align="right">Name Course</TableCell>
+                    <TableCell align="right">List student</TableCell>
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
                 </TableHead>
@@ -164,12 +165,11 @@ export default function CoursePage() {
 
                       <TableCell align="right">{row.id}</TableCell>
                       <TableCell align="right"><Link to={`/dashboard/exam/${row.id}`}>{row.name}</Link></TableCell>
+                      <TableCell align="right"><Link to={`/dashboard/course/${row.id}/students`}>List student</Link></TableCell>
                       <TableCell align="right" >
-
                       <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, row.id)}>
                           <Iconify icon={'eva:more-vertical-fill'} />
-                        </IconButton>
-                       
+                      </IconButton>
                       </TableCell>
                     </TableRow>
                   ))}

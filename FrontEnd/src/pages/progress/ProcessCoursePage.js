@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link,useParams, useNavigate } from 'react-router-dom';
 // @mui
 import {
   Modal,
@@ -51,13 +51,16 @@ export default function ProgressCoursePage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [course, setCourse] = useState([]);
+  const { id } = useParams();
   useEffect(() => {
-    const fetchTeachers = async () => {
-      const data = await courseAPI.getAll();
+    const fetchCourse = async () => {
+      const data = await courseAPI.getCourse(id);
+    
       setCourse(data);
     };
-    fetchTeachers();
+    fetchCourse();
   }, []);
+
   const navigate = useNavigate()
 
   // new course

@@ -1,8 +1,7 @@
-
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 
 // @mui
 import {
@@ -31,7 +30,7 @@ import Scrollbar from '../../components/scrollbar';
 // sections
 import { UserListToolbar } from '../../sections/@dashboard/user';
 // mock
-import studentApi from '../../services/StudentAPI';
+import courseAPI from '../../services/courseAPI';
 import { fDate } from '../../utils/formatTime';
 
 
@@ -77,7 +76,7 @@ function applySortFilter(array, comparator, query) {
   return stabilizedThis.map((el) => el[0]);
 }
 
-export default function StudentPage() {
+export default function StudentOfCoursePage() {
   const [open, setOpen] = useState(null);
 
   const [page, setPage] = useState(0);
@@ -96,19 +95,18 @@ export default function StudentPage() {
   const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [students, setStudent] = useState([]);
-  
+  const { id } = useParams();
+
   useEffect(() => {
     const fetchTeachers = async () => {
-      const data = await studentApi.getAll();
+      const data = await courseAPI.getStudents(id);
       setStudent(data);
     };
     fetchTeachers();
   }, []);
 
   const navigate = useNavigate()
-  const handleNavigateNew = () => {
-    navigate('/dashboard/studentNew')
-  }
+  
   const handleOpenMenu = (event, id) => {
     setIdRow(id);
     setOpen(event.currentTarget);
@@ -132,12 +130,12 @@ export default function StudentPage() {
     setFilterName(event.target.value);
   };
   const handleDelete = async (id) => {
-    try {
-      const response = await studentApi.delete(id);
-      console.log(response.data);
-    } catch (error) {
-      console.error(error);
-    }
+    // try {
+    //   const response = await studentApi.delete(id);
+    //   console.log(response.data);
+    // } catch (error) {
+    //   console.error(error);
+    // }
 
   }
   return (
@@ -149,10 +147,10 @@ export default function StudentPage() {
       <Container>
         <Stack direction="row" alignItems="center" justifyContent="space-between" mb={5}>
           <Typography variant="h4" gutterBottom>
-            Student
+            Course / List student
           </Typography>
           <Button onClick={handleNavigateNew} variant="contained" startIcon={<Iconify icon="eva:plus-fill" />}>
-            New Student
+            Add Student To Course
           </Button>
         </Stack>
 

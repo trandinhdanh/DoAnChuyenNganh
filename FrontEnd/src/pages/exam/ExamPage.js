@@ -128,13 +128,7 @@ export default function ExamPage() {
     }
 
   }
-  const renderCompletionButton = (completed) => {
-    if (completed) {
-      return <button disabled>Đã hoàn thành</button>;
-    } else {
-      return <button>Chưa hoàn thành</button>;
-    }
-  };
+  
 
   return (
     <>

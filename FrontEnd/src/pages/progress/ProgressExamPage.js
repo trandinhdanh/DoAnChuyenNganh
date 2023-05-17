@@ -126,20 +126,20 @@ export default function ExamPage() {
     } catch (error) {
       console.error(error);
     }
-    const handleCompleteExam = async (examId) => {
+    const handleCompleteExam = async (id) => {
       try {
         // Gọi API để cập nhật trạng thái completed của bài thi
-        const response = await examAPI.update({ completed: true }, examId);
+        const response = await examAPI.update({ completed: true }, id);
         console.log(response); // In ra kết quả từ API (tùy chỉnh cho phù hợp)
         
         // Cập nhật trạng thái completed của bài thi trong danh sách exams
-        const updatedExams = exams.map((exam) => {
-          if (exam.id === examId) {
+        const updatedExams = exam.map((exams) => {
+          if (exams.id === id) {
             return { ...exam, completed: true };
           }
           return exam;
         });
-        setExams(updatedExams);
+        setExam(updatedExams);
       } catch (error) {
         console.error(error);
       }
