@@ -1,14 +1,13 @@
 package com.techpower.exammanagement.service.impl;
 
 import com.techpower.exammanagement.constant.Status;
+import com.techpower.exammanagement.controller.output.StudentOutput;
 import com.techpower.exammanagement.converter.StudentConverter;
 import com.techpower.exammanagement.dto.CourseDTO;
 import com.techpower.exammanagement.dto.StudentDTO;
 import com.techpower.exammanagement.constant.Role;
-import com.techpower.exammanagement.entity.StudentEntity;
-import com.techpower.exammanagement.entity.User;
-import com.techpower.exammanagement.repository.StudentRepository;
-import com.techpower.exammanagement.repository.UserRepository;
+import com.techpower.exammanagement.entity.*;
+import com.techpower.exammanagement.repository.*;
 import com.techpower.exammanagement.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -29,6 +28,12 @@ public class StudentService implements IStudentService {
     private UserRepository userRepository;
     @Autowired
     private PasswordEncoder passwordEncoder;
+    @Autowired
+    private CourseRepository courseRepository;
+    @Autowired
+    private ExamRepository examRepository;
+    @Autowired
+    private ResultRepository resultRepository;
     @Override
     public List<StudentDTO> getAll() {
         List<StudentDTO> result = new ArrayList<>();
@@ -95,7 +100,23 @@ public class StudentService implements IStudentService {
         }
     }
 
-
+    @Override
+    public List<StudentOutput> getStudentsByCourse(long idCourse, long idStudent) {
+        List<StudentOutput> result = new ArrayList<>();
+        CourseEntity course = courseRepository.findOneById(idCourse);
+        for (ExamEntity examEntity : examRepository.findAllByCourse(course)) {
+            ResultEntity resultEntity = resultRepository.findByStudentAndExam(
+                    studentRepository.findOneById(idStudent),
+                    examEntity
+            );
+            StudentOutput student = new StudentOutput();
+            student.setNameExam(examEntity.getName());
+            student.setScore(resultEntity.getScore());
+            student.setComplete(resultEntity.isComplete());
+            result.add(student);
+        }
+        return result;
+    }
 
 
 }

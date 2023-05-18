@@ -57,7 +57,12 @@ const courseAPI = {
   delete: async (id) => {
     const response = await axios.delete(`${BASE_URL}/api/v1/course/${id}`, getAuthConfig());
     return response.data;
-  }
+  },
+  getScoreUser: async (idCourse,idUser) => {
+    const response = await axios.get(`${BASE_URL}/api/v1/students/${idCourse}/${idUser}`, getAuthConfig());
+    console.log(response.data)
+    return response.data;
+  },
 };
 
 export default courseAPI;

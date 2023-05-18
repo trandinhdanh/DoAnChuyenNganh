@@ -29,6 +29,7 @@ import StudentOfCoursePage from './pages/course/StudentOfCoursePage';
 import GuestCoursePage from './pages/guest/GuestCoursePage';
 import GuestExamPage from './pages/guest/GuestExamPage';
 import GuestQuestionPage from './pages/guest/GuestQuestionPage';
+import ResultPage from './pages/result/ResultPage';
 
 
 
@@ -91,6 +92,7 @@ export default function Router() {
         { path: "questionUpdate/:id", element: <UpdateQuestionPage /> },
         { path: "course/:id/add", element: <AddStudentToCourse /> },
         { path: "course/:id/students", element: <StudentOfCoursePage /> },
+        { path: "course/:id/result", element: <ResultPage /> },
       ],
     },
     

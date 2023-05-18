@@ -1,6 +1,7 @@
 package com.techpower.exammanagement.controller;
 
 import com.techpower.exammanagement.constant.Gender;
+import com.techpower.exammanagement.controller.output.StudentOutput;
 import com.techpower.exammanagement.dto.CourseDTO;
 import com.techpower.exammanagement.dto.StudentDTO;
 import com.techpower.exammanagement.service.IStudentService;
@@ -58,5 +59,9 @@ public class StudentController {
         iStudentService.remove(id);
     }
 
-
+    @GetMapping("/students/{idCourse}/{idStudent}")
+    public List<StudentOutput> getStudentsByCourse(@PathVariable("idCourse") long idCourse,
+                                                   @PathVariable("idStudent") long idStudent) {
+        return iStudentService.getStudentsByCourse(idCourse, idStudent);
+    } 
 }
