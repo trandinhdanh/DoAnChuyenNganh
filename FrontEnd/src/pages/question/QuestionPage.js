@@ -10,11 +10,7 @@ export default function QuestionPage() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [questions, setQuestions] = useState([]);
-  const [openDialog, setOpenDialog] = useState(false);
-  const [dialogMode, setDialogMode] = useState('');
-  const [dialogQuestion, setDialogQuestion] = useState('');
-  const [dialogAnswers, setDialogAnswers] = useState([]);
-  const [selectedQuestion, setSelectedQuestion] = useState(null);
+
 
   useEffect(() => {
     const fetchQuestion = async () => {

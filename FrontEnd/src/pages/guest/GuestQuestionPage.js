@@ -1,6 +1,6 @@
 import { Button, Chip, FormControl, FormControlLabel, List, ListItem, ListItemText, Radio, RadioGroup, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import examAPI from '../../services/examAPI';
 import questionAPI from '../../services/questionAPI';
 
@@ -13,6 +13,7 @@ function GuestQuestionPage() {
   const [exam, setExam] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [result,setResult] = useState({})
+  const navigate = useNavigate()
   const handleSumit = () => {
     let score = 0;
     questions.forEach((question, index) => {
@@ -72,7 +73,9 @@ function GuestQuestionPage() {
     });
     console.log(selectedAnswers);
   };
-
+  const hanldeBack = () => { 
+    navigate('/dashboard/courseStudent')
+   }
   return (
     <div>
       {content ? (
@@ -94,18 +97,17 @@ function GuestQuestionPage() {
         >
          {result.complete ? (
           <>
-              <Typography variant="h3">Bài thi môn: {exam.name}</Typography>
+              <Typography variant="h3">Bài thi: {exam.name}</Typography>
           <Typography variant="h4" style={{ margin: '0' }}>Bạn đã hoàn thành bài thi</Typography>
           <Typography variant='body1' sx={{ mb: '15px' }}>Điểm số: {result.score} đỉm.</Typography>
-          <Button variant="contained" >Quay lại trang chủ</Button>
+          <Button onClick={hanldeBack} variant="contained" >Quay lại trang chủ</Button>
           </>
          ):(
           <>
-            <Typography variant="h3">Bài thi môn: {exam.name}</Typography>
-          <Typography variant="h4" style={{ margin: '0' }}>Thời gian: 90p</Typography>
+            <Typography variant="h3">Bài thi: {exam.name}</Typography>
           <Typography variant='subtitle1' sx={{ m: '15px 0' }}>Bạn làm được : {count} / {questions.length} câu hỏi.</Typography>
           <Typography variant='body1' sx={{ mb: '15px' }}>Điểm số: {(10 / questions.length) * count} đỉm.</Typography>
-          <Button variant="contained" >Quay lại trang chủ</Button>
+          <Button onClick={hanldeBack} variant="contained" >Quay lại trang chủ</Button>
           </>
          )}
         </div>
@@ -139,14 +141,13 @@ function GuestQuestionPage() {
             }}
           >
             <Typography variant="h3">Bài thi: {exam.name}</Typography>
-            <Typography variant="h4" style={{ margin: 0 }}>Thời gian làm bài: 90p</Typography>
           </div>
         </div>
         <div className="question-answer" style={{ margin: '50px' }}>
           <List>
             {questions?.map((question, questionIndex) => (
               <ListItem key={questionIndex} sx={{ border: '1px solid', borderRadius: '4px', my: 2 }}>
-                <ListItemText primary={`${questionIndex + 1}. ${question.question}`} />
+                <ListItemText primary={`Câu ${questionIndex + 1}. ${question.question}`} />
                 <FormControl component="fieldset">
                   <RadioGroup
                     value={selectedAnswers[questionIndex] || ""}
