@@ -7,14 +7,8 @@ import com.techpower.exammanagement.converter.QuestionConverter;
 import com.techpower.exammanagement.dto.AnswerDTO;
 import com.techpower.exammanagement.dto.ExamDTO;
 import com.techpower.exammanagement.dto.QuestionDTO;
-import com.techpower.exammanagement.entity.AnswerEntity;
-import com.techpower.exammanagement.entity.CourseEntity;
-import com.techpower.exammanagement.entity.ExamEntity;
-import com.techpower.exammanagement.entity.QuestionEntity;
-import com.techpower.exammanagement.repository.AnswerRepository;
-import com.techpower.exammanagement.repository.CourseRepository;
-import com.techpower.exammanagement.repository.ExamRepository;
-import com.techpower.exammanagement.repository.QuestionRepository;
+import com.techpower.exammanagement.entity.*;
+import com.techpower.exammanagement.repository.*;
 import com.techpower.exammanagement.service.IExamService;
 import com.techpower.exammanagement.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -37,11 +31,16 @@ public class ExamService implements IExamService {
     @Autowired
     private AnswerRepository answerRepository;
     @Autowired
+    private ResultRepository resultRepository;
+    @Autowired
+    private StudentRepository studentRepository;
+    @Autowired
     private QuestionConverter questionConverter;
     @Autowired
     private AnswerConverter answerConverter;
     @Autowired
     private QuestionService questionService;
+
     @Override
     public List<ExamDTO> getAll() {
         List<ExamDTO> result = new ArrayList<>();
@@ -79,7 +78,16 @@ public class ExamService implements IExamService {
         ExamEntity examEntity = examConverter.toEntity(dto);
         CourseEntity course = courseRepository.findOneById(idCourse);
         examEntity.setCourse(course);
-        return examConverter.toDTO(examRepository.save(examEntity));
+        ExamEntity result = examRepository.save(examEntity);
+        for (StudentEntity student : studentRepository.findStudentsByCourseId(idCourse)) {
+            ResultEntity resultEntity = new ResultEntity();
+            resultEntity.setScore(0L);
+            resultEntity.setComplete(false);
+            resultEntity.setStudent(student);
+            resultEntity.setExam(result);
+            resultRepository.save(resultEntity);
+        }
+        return examConverter.toDTO(result);
     }
 
     @Override
@@ -97,6 +105,7 @@ public class ExamService implements IExamService {
             for (QuestionEntity questionEntity : questionRepository.findAllByExam(exam)) {
                 answerRepository.deleteAllByQuestion(questionEntity);
             }
+            resultRepository.deleteAllByExam(exam);
             questionRepository.deleteAllByExam(exam);
             examRepository.deleteById(id);
         }
@@ -108,7 +117,8 @@ public class ExamService implements IExamService {
         List<ExamEntity> exams = examRepository.findAllByCourse(course);
         return examConverter.toDTOs(exams);
     }
-//    public boolean isExamCompleted(Long examId) {
+
+    //    public boolean isExamCompleted(Long examId) {
 //        ExamEntity examEntity = examRepository.findOneById(examId);
 //        for (QuestionEntity question : examEntity.getQuestions()) {
 //            if (question.getAnswer().isEmpty()) {
@@ -117,7 +127,7 @@ public class ExamService implements IExamService {
 //        }
 //
 //        return true;
-public boolean isExamCompleted(Long examId) {
+    public boolean isExamCompleted(Long examId) {
         ExamEntity examEntity = examRepository.findOneById(examId);
         for (QuestionEntity question : examEntity.getQuestions()) {
             if (!questionService.isAnswered(question.getId())) {
@@ -127,4 +137,5 @@ public boolean isExamCompleted(Long examId) {
 
         return true;
 
-}}
+    }
+}

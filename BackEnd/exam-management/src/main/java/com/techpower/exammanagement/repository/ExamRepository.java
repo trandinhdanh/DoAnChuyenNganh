@@ -11,6 +11,7 @@ import java.util.List;
 @Repository
 public interface ExamRepository extends JpaRepository<ExamEntity, Long> {
     ExamEntity findOneById(long id);
+
     void deleteAllByCourse(CourseEntity courseEntity);
 
     List<ExamEntity> findAllByCourse(CourseEntity courseEntity);
