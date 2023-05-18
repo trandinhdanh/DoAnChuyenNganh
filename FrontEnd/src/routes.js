@@ -26,7 +26,8 @@ import NewQuestionPage from './pages/question/NewQuestionPage';
 import UpdateQuestionPage from './pages/question/UpdateQuestionPage';
 import AddStudentToCourse from './pages/course/AddStudentToCourse';
 import StudentOfCoursePage from './pages/course/StudentOfCoursePage';
-
+import MyExam from './pages/MyExam';
+import ListExam from './pages/ListExam';
 
 
 // // ----------------------------------------------------------------------
@@ -105,6 +106,8 @@ export default function Router() {
       children: [
         { path: "products", element: <ProductsPage /> },
         { path: "blog", element: <BlogPage /> },
+        { path: "mycourse/:id", element: <MyExam /> },
+        { path: "list-exam", element: <ListExam /> },
       ],
     },
 
