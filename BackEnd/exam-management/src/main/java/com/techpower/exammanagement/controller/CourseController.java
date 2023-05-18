@@ -53,7 +53,7 @@ public class CourseController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping("/course/{idUser}/courses")
+    @GetMapping("/user/{idUser}/courses")
     public ResponseEntity<List<CourseDTO>> getCourseByStudent(@PathVariable long idUser) {
         return ResponseEntity.ok().body(iCourseService.getAllCourseByStudent(idUser));
     }
