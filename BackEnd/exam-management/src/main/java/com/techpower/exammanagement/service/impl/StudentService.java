@@ -53,9 +53,10 @@ public class StudentService implements IStudentService {
         StudentEntity entity = studentConverter.toEntity(dto);
 
         User user = new User();
-        String regex = "\\p{InCombiningDiacriticalMarks}+";
-        String normalized = Normalizer.normalize(dto.getFullName().replaceAll("\\s+", "").toLowerCase(), Normalizer.Form.NFD);
-        String username = Pattern.compile(regex).matcher(normalized).replaceAll("");
+        String username = Normalizer.normalize(dto.getFullName(), Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                .replaceAll("\\s", "")
+                .toLowerCase();
         if (userRepository.findOneByUserName(username) == null) {
             user.setUserName(username);
             StringBuilder password = new StringBuilder();

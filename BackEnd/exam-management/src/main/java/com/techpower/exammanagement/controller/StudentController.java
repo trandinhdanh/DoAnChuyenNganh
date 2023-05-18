@@ -63,5 +63,5 @@ public class StudentController {
     public List<StudentOutput> getStudentsByCourse(@PathVariable("idCourse") long idCourse,
                                                    @PathVariable("idStudent") long idStudent) {
         return iStudentService.getStudentsByCourse(idCourse, idStudent);
-    } 
+    }
 }
