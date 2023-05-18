@@ -1,5 +1,6 @@
 package com.techpower.exammanagement.service.impl;
 
+import com.techpower.exammanagement.controller.ouput.ExamOutput;
 import com.techpower.exammanagement.converter.ExamConverter;
 import com.techpower.exammanagement.dto.ExamDTO;
 import com.techpower.exammanagement.entity.CourseEntity;
@@ -10,6 +11,7 @@ import com.techpower.exammanagement.repository.CourseRepository;
 import com.techpower.exammanagement.repository.ExamRepository;
 import com.techpower.exammanagement.repository.QuestionRepository;
 import com.techpower.exammanagement.service.IExamService;
+import com.techpower.exammanagement.service.IQuestionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -29,6 +31,8 @@ public class ExamService implements IExamService {
     private QuestionRepository questionRepository;
     @Autowired
     private AnswerRepository answerRepository;
+    @Autowired
+    private IQuestionService iQuestionService;
 
     @Override
     public List<ExamDTO> getAll() {
@@ -40,8 +44,11 @@ public class ExamService implements IExamService {
     }
 
     @Override
-    public ExamDTO getDetail(long id) {
-        return examConverter.toDTO(examRepository.findOneById(id));
+    public ExamOutput getDetail(long id) {
+        ExamOutput result = new ExamOutput();
+        result.setExam(examConverter.toDTO(examRepository.findOneById(id)));
+        result.setQuestions(iQuestionService.getAll());
+        return result;
     }
 
     @Override
