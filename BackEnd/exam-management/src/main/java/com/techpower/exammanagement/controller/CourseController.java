@@ -27,7 +27,7 @@ public class CourseController {
     }
 
     @GetMapping("/course/{idCourse}/students")
-    public ResponseEntity<List<StudentDTO>>  getStudentsByCourse(@PathVariable long idCourse) {
+    public ResponseEntity<List<StudentDTO>> getStudentsByCourse(@PathVariable long idCourse) {
         return ResponseEntity.ok().body(iCourseService.getStudentsByCourse(idCourse));
     }
 
@@ -52,9 +52,10 @@ public class CourseController {
         iCourseService.remove(id);
         return ResponseEntity.ok().build();
     }
-    @GetMapping("progress/course/student/{idStudent}")
-    public List<CourseDTO>  getCourseByStudent(@PathVariable long idStudent) {
-        return iCourseService.getCourseByStudent(idStudent);
+
+    @GetMapping("/course/{idStudent}/courses")
+    public ResponseEntity<List<CourseDTO>> getCourseByStudent(@PathVariable long idStudent) {
+        return ResponseEntity.ok().body(iCourseService.getAllCourseByStudent(idStudent));
     }
 
 }
