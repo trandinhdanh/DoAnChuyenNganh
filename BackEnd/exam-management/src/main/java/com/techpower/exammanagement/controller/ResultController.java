@@ -13,11 +13,11 @@ public class ResultController {
     @Autowired
     private IResultService iResultService;
 
-    @PutMapping("/submit/{idStudent}/{idExam}")
-    public ResultOutput submit(@PathVariable("idStudent") long idStudent,
+    @PutMapping("/submit/{idUser}/{idExam}")
+    public ResultOutput submit(@PathVariable("idUser") long idUser,
                                @PathVariable("idExam") long idExam,
                                @RequestBody ResultDTO dto) {
-        return iResultService.submit(dto.getScore(), idStudent, idExam);
+        return iResultService.submit(dto.getScore(), idUser, idExam);
     }
 
 }
