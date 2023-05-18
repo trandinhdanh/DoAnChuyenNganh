@@ -81,7 +81,7 @@ public class ExamService implements IExamService {
         ExamEntity result = examRepository.save(examEntity);
         for (StudentEntity student : studentRepository.findStudentsByCourseId(idCourse)) {
             ResultEntity resultEntity = new ResultEntity();
-            resultEntity.setScore(0L);
+            resultEntity.setScore(0.0);
             resultEntity.setComplete(false);
             resultEntity.setStudent(student);
             resultEntity.setExam(result);

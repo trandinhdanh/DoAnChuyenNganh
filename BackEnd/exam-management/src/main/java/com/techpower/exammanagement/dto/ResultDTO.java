@@ -7,6 +7,6 @@ import lombok.Setter;
 @Setter
 public class ResultDTO {
     private Long id;
-    private Long score;
+    private double score;
     private boolean isComplete;
 }

@@ -2,6 +2,7 @@ package com.techpower.exammanagement.service.impl;
 
 import com.techpower.exammanagement.controller.output.ResultOutput;
 import com.techpower.exammanagement.converter.ResultConverter;
+import com.techpower.exammanagement.dto.ResultDTO;
 import com.techpower.exammanagement.entity.ResultEntity;
 import com.techpower.exammanagement.entity.User;
 import com.techpower.exammanagement.repository.*;
@@ -25,7 +26,7 @@ public class ResultService implements IResultService {
     private ResultConverter resultConverter;
 
     @Override
-    public ResultOutput submit(long score, long idUser, long idExam) {
+    public ResultOutput submit(double score, long idUser, long idExam) {
         User user = userRepository.findOneById(idUser);
         ResultEntity resultEntity = resultRepository.findByStudentAndExam(
                 studentRepository.findOneById(studentRepository.findOneByUser(user).getId()),
@@ -42,5 +43,14 @@ public class ResultService implements IResultService {
         result.setNameCourse(examRepository.findOneById(idExam).getCourse().getName());
         result.setNameExam(examRepository.findOneById(idExam).getName());
         return result;
+    }
+
+    @Override
+    public ResultDTO getDetail(long idUser, long idExam) {
+        ResultEntity resultEntity = resultRepository.findByStudentAndExam(
+                studentRepository.findOneByUser(userRepository.findOneById(idUser)),
+                examRepository.findOneById(idExam)
+        );
+        return resultConverter.toDTO(resultEntity);
     }
 }

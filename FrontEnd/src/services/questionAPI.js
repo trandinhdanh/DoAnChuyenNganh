@@ -40,7 +40,11 @@ const questionAPI = {
   delete: async (id) => {
     const response = await axios.delete(`${BASE_URL}/api/v1/question/${id}`, getAuthConfig());
     return response.data;
-  }
+  },
+  checked: async (idUser,idExam) => {
+    const response = await axios.get(`${BASE_URL}/api/v1/result/${idUser}/${idExam}`, getAuthConfig());
+    return response.data;
+  },
 };
 
 export default questionAPI;

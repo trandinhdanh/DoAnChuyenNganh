@@ -119,7 +119,7 @@ public class CourseService implements ICourseService {
         for (Long idStudent : idStudents) {
             for (ExamEntity examEntity : examRepository.findAllByCourse(courseEntity)) {
                 ResultEntity resultEntity = new ResultEntity();
-                resultEntity.setScore(0L);
+                resultEntity.setScore(0.0);
                 resultEntity.setComplete(false);
                 resultEntity.setStudent(studentRepository.findOneById(idStudent));
                 resultEntity.setExam(examEntity);

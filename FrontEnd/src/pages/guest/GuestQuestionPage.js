@@ -1,17 +1,18 @@
-import { Button, FormControl, FormControlLabel, List, ListItem, ListItemText, Radio, RadioGroup, Typography } from '@mui/material';
+import { Button, Chip, FormControl, FormControlLabel, List, ListItem, ListItemText, Radio, RadioGroup, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import examAPI from '../../services/examAPI';
+import questionAPI from '../../services/questionAPI';
 
 
 function GuestQuestionPage() {
   const { id } = useParams();
-  const [content, setContent] = useState(true);
+  const [content, setContent] = useState(false);
   const [count, setCount] = useState(0);
   const [selectedAnswers, setSelectedAnswers] = useState([]);
   const [exam, setExam] = useState([]);
   const [questions, setQuestions] = useState([]);
-
+  const [result,setResult] = useState({})
   const handleSumit = () => {
     let score = 0;
     questions.forEach((question, index) => {
@@ -23,7 +24,7 @@ function GuestQuestionPage() {
     })
     const goal = (10 / questions.length) * score;
     try {
-      const response = examAPI.submit(localStorage.getItem("user"),id,goal);
+      const response = examAPI.submit(localStorage.getItem("user"),id,{score : goal});
       console.log(response.data);
     } catch (error) {
       console.error("error create student", error);
@@ -31,9 +32,9 @@ function GuestQuestionPage() {
     setCount(score);
     console.log("goal: ", goal);
     console.log("selectedAnswers", selectedAnswers);
-    setContent(false);
+    setContent(true);
   };
-
+  const userId = localStorage.getItem('user');
   useEffect(() => {
     const fetchQuestion = async () => {
       try {
@@ -48,6 +49,19 @@ function GuestQuestionPage() {
       }
     };
     fetchQuestion();
+    
+    const fetchIsComplete = async () => {
+      try {
+        const response = await questionAPI.checked(userId,id);
+        console.log(response);
+        setResult(response)
+        setContent(response.complete)
+      } catch (error) {
+        console.error('Failed to fetch questions:', error);
+      }
+    };
+    fetchIsComplete();
+
   }, [id]);
 
   const handleAnswerChange = (questionIndex, answerIndex) => {
@@ -62,90 +76,102 @@ function GuestQuestionPage() {
   return (
     <div>
       {content ? (
-        <div className="test-container" style={{ paddingBottom: '30px' }}>
-          <div
-            className="test-title"
-            style={{
-              display: 'flex',
-              justifyContent: 'center',
-              flexDirection: 'column',
-              alignItems: 'center',
-              textAlign: 'center',
-              marginTop: '20px',
-            }}
-          >
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'center',
-                flexDirection: 'column',
-                alignItems: 'center',
-                textAlign: 'center',
-                backgroundColor: '#efefef',
-                minWidth: '500px',
-                height: '220px',
-                borderRadius: '20px',
-              }}
-            >
-              <Typography variant="h1">Bài thi: {exam.name}</Typography>
-              <Typography variant="h3" style={{ margin: 0 }}>Thời gian làm bài: 90p</Typography>
-            </div>
-          </div>
-          <div className="question-answer" style={{ margin: '50px' }}>
-            <List>
-              {questions?.map((question, questionIndex) => (
-                <ListItem key={questionIndex} sx={{ border: '1px solid', borderRadius: '4px', my: 2 }}>
-                  <ListItemText primary={`${questionIndex + 1}. ${question.question}`} />
-                  <FormControl component="fieldset">
-                    <RadioGroup
-                      value={selectedAnswers[questionIndex] || ""}
-                      onChange={(e) => handleAnswerChange(questionIndex, e.target.value)}
-                    >
-                      {question.answers.map((answer, answerIndex) => (
-                        <FormControlLabel
-                          key={answerIndex}
-                          value={answerIndex.toString()}
-                          control={<Radio color="primary" />}
-                          label={`${String.fromCharCode(65 + answerIndex)}. ${answer.answer}`}
-                        />
-                      ))}
-                    </RadioGroup>
-                  </FormControl>
-                </ListItem>
-              ))}
-            </List>
-          </div>
-          <div className="submit" style={{ display: 'flex', justifyContent: 'center' }}>
-            <Button onClick={handleSumit} variant="contained">
-              Nộp bài
-            </Button>
-          </div>
-        </div>
-      ) : (
         <div style={{ display: 'flex', justifyContent: 'center', marginTop: '50px' }}>
+        <div
+          className="result"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            height: '300px',
+            width: '600px',
+            border: '0.5px solid #dfdfdf',
+            borderRadius: '8px',
+            backgroundColor: '#efefef',
+          }}
+        >
+         {result.complete ? (
+          <>
+              <Typography variant="h3">Bài thi môn: {exam.name}</Typography>
+          <Typography variant="h4" style={{ margin: '0' }}>Bạn đã hoàn thành bài thi</Typography>
+          <Typography variant='body1' sx={{ mb: '15px' }}>Điểm số: {result.score} đỉm.</Typography>
+          <Button variant="contained" >Quay lại trang chủ</Button>
+          </>
+         ):(
+          <>
+            <Typography variant="h3">Bài thi môn: {exam.name}</Typography>
+          <Typography variant="h4" style={{ margin: '0' }}>Thời gian: 90p</Typography>
+          <Typography variant='subtitle1' sx={{ m: '15px 0' }}>Bạn làm được : {count} / {questions.length} câu hỏi.</Typography>
+          <Typography variant='body1' sx={{ mb: '15px' }}>Điểm số: {(10 / questions.length) * count} đỉm.</Typography>
+          <Button variant="contained" >Quay lại trang chủ</Button>
+          </>
+         )}
+        </div>
+      </div>
+       
+      ) : (
+        <div className="test-container" style={{ paddingBottom: '30px' }}>
+        <div
+          className="test-title"
+          style={{
+            display: 'flex',
+            justifyContent: 'center',
+            flexDirection: 'column',
+            alignItems: 'center',
+            textAlign: 'center',
+            marginTop: '20px',
+          }}
+        >
           <div
-            className="result"
             style={{
               display: 'flex',
               justifyContent: 'center',
               flexDirection: 'column',
               alignItems: 'center',
               textAlign: 'center',
-              height: '300px',
-              width: '600px',
-              border: '0.5px solid #dfdfdf',
-              borderRadius: '8px',
               backgroundColor: '#efefef',
+              minWidth: '500px',
+              height: '220px',
+              padding: '30px',
+              borderRadius: '20px',
             }}
           >
-            <Typography variant="h2">Bài thi môn: {exam.name}</Typography>
-            <Typography variant="h4" style={{ margin: '0' }}>Thời gian: 90p</Typography>
-            {/* số điểm : {(10 / questions.length) * count} */}
-            <Typography variant='subtitle1' sx={{ m: '15px 0' }}>Bạn làm được : {count} / {questions.length} câu hỏi.</Typography>
-            <Typography variant='body1' sx={{ mb: '15px' }}>Điểm số: {(10 / questions.length) * count} đỉm.</Typography>
-            <Button variant="contained" >Quay lại trang chủ</Button>
+            <Typography variant="h3">Bài thi: {exam.name}</Typography>
+            <Typography variant="h4" style={{ margin: 0 }}>Thời gian làm bài: 90p</Typography>
           </div>
         </div>
+        <div className="question-answer" style={{ margin: '50px' }}>
+          <List>
+            {questions?.map((question, questionIndex) => (
+              <ListItem key={questionIndex} sx={{ border: '1px solid', borderRadius: '4px', my: 2 }}>
+                <ListItemText primary={`${questionIndex + 1}. ${question.question}`} />
+                <FormControl component="fieldset">
+                  <RadioGroup
+                    value={selectedAnswers[questionIndex] || ""}
+                    onChange={(e) => handleAnswerChange(questionIndex, e.target.value)}
+                  >
+                    {question.answers.map((answer, answerIndex) => (
+                      <FormControlLabel
+                        key={answerIndex}
+                        value={answerIndex.toString()}
+                        control={<Radio color="primary" />}
+                        label={`${String.fromCharCode(65 + answerIndex)}. ${answer.answer}`}
+                      />
+                    ))}
+                  </RadioGroup>
+                </FormControl>
+              </ListItem>
+            ))}
+          </List>
+        </div>
+        <div className="submit" style={{ display: 'flex', justifyContent: 'center' }}>
+          <Button onClick={handleSumit} variant="contained">
+            Nộp bài
+          </Button>
+        </div>
+      </div>
       )}
     </div>
   );

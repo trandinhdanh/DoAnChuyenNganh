@@ -13,7 +13,7 @@ public class ResultEntity {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     @JoinColumn
-    private Long score;
+    private Double score;
     @JoinColumn
     private boolean isComplete;
     @ManyToOne
