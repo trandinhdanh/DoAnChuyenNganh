@@ -17,31 +17,6 @@ export default function QuestionPage() {
   const [selectedQuestion, setSelectedQuestion] = useState(null);
 
   useEffect(() => {
-    // Tạo dữ liệu mẫu
-    // const sampleQuestions = [
-    //   {
-    //     id: 1,
-    //     question: 'Đây là câu hỏi 1?',
-    //     answers: [
-    //       { id: 1, answer: '2', correctAnswer: false },
-    //       { id: 2, answer: '3', correctAnswer: true },
-    //       { id: 3, answer: '4', correctAnswer: false },
-    //       { id: 4, answer: '5', correctAnswer: false },
-    //     ],
-    //   },
-    //   {
-    //     id: 2,
-    //     question: 'Đây là câu hỏi 2?',
-    //     answers: [
-    //       { id: 5, answer: '2', correctAnswer: false },
-    //       { id: 6, answer: '3', correctAnswer: false },
-    //       { id: 7, answer: '4', correctAnswer: true },
-    //       { id: 8, answer: '5', correctAnswer: false },
-    //     ],
-    //   },
-    //   // Thêm các câu hỏi khác tại đây
-    // ];
-    // setQuestions(sampleQuestions)
     const fetchQuestion = async () => {
         const response = await examAPI.getById(id);
         setQuestions(response.questions);

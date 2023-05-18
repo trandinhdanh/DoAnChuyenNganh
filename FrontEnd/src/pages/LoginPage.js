@@ -50,7 +50,7 @@ export default function LoginPage() {
   const navigate = useNavigate();
   const adminDefaultPath = "/dashboard/app";
   const teacherDefaultPath = "/dashboard/student";
-  const studentDefaultPath = "/dashboard/blog";
+  const studentDefaultPath = "/dashboard/courseStudent";
 
   useEffect(() => {
     if (user) {

@@ -26,6 +26,9 @@ import NewQuestionPage from './pages/question/NewQuestionPage';
 import UpdateQuestionPage from './pages/question/UpdateQuestionPage';
 import AddStudentToCourse from './pages/course/AddStudentToCourse';
 import StudentOfCoursePage from './pages/course/StudentOfCoursePage';
+import GuestCoursePage from './pages/guest/GuestCoursePage';
+import GuestExamPage from './pages/guest/GuestExamPage';
+import GuestQuestionPage from './pages/guest/GuestQuestionPage';
 
 
 
@@ -105,6 +108,9 @@ export default function Router() {
       children: [
         { path: "products", element: <ProductsPage /> },
         { path: "blog", element: <BlogPage /> },
+        { path: "courseStudent", element: <GuestCoursePage /> },
+        { path: "courseStudent/:id", element: <GuestExamPage /> },
+        { path: "questionStudent/:id", element: <GuestQuestionPage /> },
       ],
     },
 
