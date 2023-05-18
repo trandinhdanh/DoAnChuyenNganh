@@ -8,20 +8,20 @@ import courseAPI from '../../services/courseAPI';
 
 export default function GuestCoursePage() {
   const [courses, setCourses] = useState([]);
-
+  const userId = localStorage.getItem('user');
+  
   useEffect(() => {
-    const userId = localStorage.getItem('user');
-    console.log(userId);
-    // const fetchCourses = async (id) => {
-    //   try {
-    //     const data = await courseAPI.getCourseByUser(id);
-    //     setCourses(data);
-    //   } catch (error) {
-    //     console.error('Failed to fetch courses:', error);
-    //   }
-    // };
+    const fetchCourses = async (userId) => {
+      console.log(userId);
+      try {
+        const data = await courseAPI.getCourseByUser(userId);
+        setCourses(data);
+      } catch (error) {
+        console.error('Failed to fetch courses:', error);
+      }
+    };
 
-    // fetchCourses();
+    fetchCourses();
   }, []);
 
   return (

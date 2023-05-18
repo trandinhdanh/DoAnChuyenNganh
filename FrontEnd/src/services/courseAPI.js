@@ -25,7 +25,7 @@ const courseAPI = {
     return response.data;
   },
   getCourseByUser: async (idUser) => {
-    const response = await axios.get(`${BASE_URL}/api/v1/user/${idUser}/courses`, getAuthConfig());
+    const response = await axios.get(`${BASE_URL}/api/v1/user/13/courses`, getAuthConfig());
     console.log(response.data)
     return response.data;
   },
