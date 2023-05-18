@@ -10,16 +10,18 @@ export default function GuestCoursePage() {
   const [courses, setCourses] = useState([]);
 
   useEffect(() => {
-    const fetchCourses = async () => {
-      try {
-        const data = await courseAPI.getAll();
-        setCourses(data);
-      } catch (error) {
-        console.error('Failed to fetch courses:', error);
-      }
-    };
+    const userId = localStorage.getItem('user');
+    console.log(userId);
+    // const fetchCourses = async (id) => {
+    //   try {
+    //     const data = await courseAPI.getCourseByUser(id);
+    //     setCourses(data);
+    //   } catch (error) {
+    //     console.error('Failed to fetch courses:', error);
+    //   }
+    // };
 
-    fetchCourses();
+    // fetchCourses();
   }, []);
 
   return (
