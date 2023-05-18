@@ -130,9 +130,10 @@ public class CourseService implements ICourseService {
     }
 
     @Override
-    public List<CourseDTO> getAllCourseByStudent(long idStudent) {
+    public List<CourseDTO> getAllCourseByStudent(long idUser) {
 //        StudentEntity studentEntity = studentRepository.findOneById(idStudent);
-        List<CourseEntity> courseEntities = courseRepository.findCoursesByStudentId(idStudent);
+        StudentEntity studentEntity = studentRepository.findOneByUser(userRepository.findOneById(idUser));
+        List<CourseEntity> courseEntities = courseRepository.findCoursesByStudentId(studentEntity.getId());
         List<CourseDTO> result = new ArrayList<>();
         for (CourseEntity courseEntity : courseEntities) {
             result.add(courseConverter.toDTO(courseEntity));
