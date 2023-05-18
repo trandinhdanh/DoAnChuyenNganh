@@ -1,4 +1,4 @@
-package com.techpower.exammanagement.controller.ouput;
+package com.techpower.exammanagement.controller.output;
 
 import com.techpower.exammanagement.dto.ExamDTO;
 import com.techpower.exammanagement.dto.QuestionDTO;
@@ -12,5 +12,5 @@ import java.util.List;
 @Setter
 public class ExamOutput {
     private ExamDTO exam;
-    private List<QuestionDTO> questions= new ArrayList<>();
+    private List<QuestionDTO> questions = new ArrayList<>();
 }

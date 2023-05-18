@@ -10,11 +10,15 @@ public interface ICourseService {
 
     CourseDTO getDetail(long id);
 
+    List<StudentDTO> getStudentsByCourse(long idCourse);
+
     CourseDTO save(CourseDTO dto, long idUser);
 
     CourseDTO update(CourseDTO dto);
 
     void remove(long id);
 
-    CourseDTO addStudentToCourse(long idCourse, long idUser);
+    CourseDTO addStudentToCourse(long idCourse, List<Long> idStudent);
+
+    List<CourseDTO> getAllCourseByStudent(long idStudent);
 }

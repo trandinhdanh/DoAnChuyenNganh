@@ -1,5 +1,6 @@
 package com.techpower.exammanagement.service;
 
+import com.techpower.exammanagement.dto.CourseDTO;
 import com.techpower.exammanagement.dto.StudentDTO;
 
 import java.util.List;
@@ -14,4 +15,5 @@ public interface IStudentService {
     StudentDTO update(StudentDTO student);
 
     void remove(Long id);
+
 }

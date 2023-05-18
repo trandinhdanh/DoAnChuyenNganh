@@ -23,4 +23,9 @@ public class ExamEntity {
     @OneToMany(mappedBy = "exam")
     private List<QuestionEntity> questions = new ArrayList<>();
 
+//    @ManyToMany(fetch = FetchType.EAGER)
+//    @JoinTable(name = "Exam_student", joinColumns = @JoinColumn(name = "exam_id"), inverseJoinColumns = @JoinColumn(name = "student_id"))
+//    private List<ExamEntity> exam = new ArrayList<>();
+    @OneToMany(mappedBy = "exam")
+    private List<ResultEntity> results;
 }

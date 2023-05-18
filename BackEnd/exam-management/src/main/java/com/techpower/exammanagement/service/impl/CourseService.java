@@ -3,6 +3,7 @@ package com.techpower.exammanagement.service.impl;
 import com.techpower.exammanagement.converter.CourseConverter;
 import com.techpower.exammanagement.converter.StudentConverter;
 import com.techpower.exammanagement.dto.CourseDTO;
+import com.techpower.exammanagement.dto.ExamDTO;
 import com.techpower.exammanagement.dto.StudentDTO;
 import com.techpower.exammanagement.entity.*;
 import com.techpower.exammanagement.repository.*;
@@ -31,6 +32,8 @@ public class CourseService implements ICourseService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private ResultRepository resultRepository;
+    @Autowired
     private CourseConverter courseConverter;
     @Autowired
     private StudentConverter studentConverter;
@@ -48,6 +51,7 @@ public class CourseService implements ICourseService {
     public CourseDTO getDetail(long id) {
         return courseConverter.toDTO(courseRepository.findOneById(id));
     }
+
 
     @Override
     public CourseDTO save(CourseDTO dto, long idUser) {
@@ -73,6 +77,7 @@ public class CourseService implements ICourseService {
                 for (QuestionEntity questionEntity : questionRepository.findAllByExam(examEntity)) {
                     answerRepository.deleteAllByQuestion(questionEntity);
                 }
+                resultRepository.deleteAllByExam(examEntity);
                 questionRepository.deleteAllByExam(examEntity);
 
             }
@@ -82,19 +87,57 @@ public class CourseService implements ICourseService {
     }
 
     @Override
+    public List<StudentDTO> getStudentsByCourse(long idCourse) {
+        CourseEntity courseEntity = courseRepository.findOneById(idCourse);
+        List<StudentEntity> students = courseEntity.getStudents();
+        List<StudentDTO> studentDTOS = new ArrayList<>();
+        for (StudentEntity studentEntity : students) {
+            studentDTOS.add(studentConverter.toDTO(studentEntity));
+        }
+        return studentDTOS;
+    }
+
+    @Override
     @Transactional
-    public CourseDTO addStudentToCourse(long idCourse, long idUser) {
+    public CourseDTO addStudentToCourse(long idCourse, List<Long> idStudents) {
         CourseEntity courseEntity = courseRepository.findOneById(idCourse);
 
-        List<StudentEntity> students = new ArrayList<>();
+        List<StudentEntity> students = courseEntity.getStudents();
         List<StudentDTO> studentDTOS = new ArrayList<>();
-        StudentEntity studentEntity = studentRepository.findOneByUser(userRepository.findOneById(idUser));
-        students.add(studentEntity);
-        studentDTOS.add(studentConverter.toDTO(studentEntity));
+        idStudents.forEach(id -> {
+            if (studentRepository.existsById(id)) {
+                students.add(studentRepository.findOneById(id));
+            }
+        });
 
+//        studentDTOS.add(studentConverter.toDTO(studentEntity));
+        students.forEach(studentEntity -> studentDTOS.add(studentConverter.toDTO(studentEntity)));
         courseEntity.setStudents(students);
         CourseDTO result = courseConverter.toDTO(courseRepository.save(courseEntity));
         result.setStudents(studentDTOS);
+
+        for (Long idStudent : idStudents) {
+            for (ExamEntity examEntity : examRepository.findAllByCourse(courseEntity)) {
+                ResultEntity resultEntity = new ResultEntity();
+                resultEntity.setScore(0L);
+                resultEntity.setComplete(false);
+                resultEntity.setStudent(studentRepository.findOneById(idStudent));
+                resultEntity.setExam(examEntity);
+                resultRepository.save(resultEntity);
+            }
+        }
         return result;
     }
+
+    @Override
+    public List<CourseDTO> getAllCourseByStudent(long idStudent) {
+//        StudentEntity studentEntity = studentRepository.findOneById(idStudent);
+        List<CourseEntity> courseEntities = courseRepository.findCoursesByStudentId(idStudent);
+        List<CourseDTO> result = new ArrayList<>();
+        for (CourseEntity courseEntity : courseEntities) {
+            result.add(courseConverter.toDTO(courseEntity));
+        }
+        return result;
+    }
+
 }

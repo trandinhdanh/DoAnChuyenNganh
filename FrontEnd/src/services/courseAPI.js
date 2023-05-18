@@ -14,14 +14,28 @@ const courseAPI = {
     console.log(response.data)
     return response.data;
   },
-
+  getStudents: async (id) => {
+    const response = await axios.get(`${BASE_URL}/api/v1/course/${id}/students`, getAuthConfig());
+    console.log(response.data)
+    return response.data;
+  },
+  getCourse: async (id) => {
+    const response = await axios.get(`${BASE_URL}/api/v1/course/students/${id}`, getAuthConfig());
+    console.log(response.data)
+    return response.data;
+  },
+  addStudents: async (id,idStudents) => {
+    const response = await axios.post(`${BASE_URL}/api/v1/course/${id}/${idStudents}`, getAuthConfig());
+    console.log(response.data)
+    return response.data;
+  },
   getById: async (id) => {
-    const response = await axios.get(`${BASE_URL}/api/v1/student/${id}`, getAuthConfig());
+    const response = await axios.get(`${BASE_URL}/api/v1/course/${id}`, getAuthConfig());
     return response.data;
   },
 
-  create: async (course) => {
-    const response = await axios.post(`${BASE_URL}/api/v1/course`, course,  {
+  create: async (course,id) => {
+    const response = await axios.post(`${BASE_URL}/api/v1/course/${id}`, course,  {
       ...getAuthConfig(),
       'Content-Type': 'multipart/form-data'
 });

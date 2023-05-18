@@ -1,9 +1,11 @@
 package com.techpower.exammanagement.controller;
 
 import com.techpower.exammanagement.constant.Gender;
+import com.techpower.exammanagement.dto.CourseDTO;
 import com.techpower.exammanagement.dto.StudentDTO;
 import com.techpower.exammanagement.service.IStudentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Date;
@@ -55,5 +57,6 @@ public class StudentController {
     public void deleteProduct(@PathVariable Long id) {
         iStudentService.remove(id);
     }
+
 
 }

@@ -1,6 +1,6 @@
 package com.techpower.exammanagement.controller;
 
-import com.techpower.exammanagement.controller.ouput.ExamOutput;
+import com.techpower.exammanagement.controller.output.ExamOutput;
 import com.techpower.exammanagement.dto.ExamDTO;
 import com.techpower.exammanagement.service.IExamService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +26,7 @@ public class ExamController {
         return iExamService.getDetail(id);
     }
 
+
     @PostMapping("/exam/{idCourse}")
     public ExamDTO save(@RequestBody ExamDTO dto, @PathVariable long idCourse) {
         return iExamService.save(dto, idCourse);
@@ -41,5 +42,13 @@ public class ExamController {
     public ResponseEntity<?> deleteProduct(@PathVariable long id) {
         iExamService.remove(id);
         return ResponseEntity.ok().build();
+    }
+    @GetMapping("/exam/course/{idCourse}")
+    public List<ExamDTO> getExamsByCourse(@PathVariable long idCourse) {
+        return iExamService.getExamsByCourse(idCourse);
+    }
+    @GetMapping("/exam/{examId}/completed")
+    public ResponseEntity<Boolean> isExamCompleted(@PathVariable Long examId) {
+        return ResponseEntity.ok(iExamService.isExamCompleted(examId));
     }
 }

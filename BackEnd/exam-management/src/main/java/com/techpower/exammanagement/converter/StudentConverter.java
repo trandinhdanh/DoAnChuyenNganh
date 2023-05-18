@@ -1,8 +1,13 @@
 package com.techpower.exammanagement.converter;
 
+import com.techpower.exammanagement.dto.CourseDTO;
 import com.techpower.exammanagement.dto.StudentDTO;
+import com.techpower.exammanagement.entity.CourseEntity;
 import com.techpower.exammanagement.entity.StudentEntity;
 import org.springframework.stereotype.Component;
+
+import java.util.ArrayList;
+import java.util.List;
 
 @Component
 public class StudentConverter {
@@ -30,4 +35,12 @@ public class StudentConverter {
         entity.setBirthday(dto.getBirthday());
         return entity;
     }
+    public List<StudentDTO> toDTOs(List<StudentEntity> entities) {
+        List<StudentDTO> dtos = new ArrayList<>();
+        for (StudentEntity entity : entities) {
+            dtos.add(toDTO(entity));
+        }
+        return dtos;
+    }
+
 }

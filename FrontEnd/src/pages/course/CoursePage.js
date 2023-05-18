@@ -33,10 +33,11 @@ import { UserListToolbar } from '../../sections/@dashboard/user';
 // mock
 import studentApi from '../../services/StudentAPI';
 import courseAPI from '../../services/courseAPI';
+import { useAuth } from '../../context/AuthContext';
 
 export default function CoursePage() {
   const [open, setOpen] = useState(null);
-
+  const { userDTO} = useAuth();
   const [page, setPage] = useState(0);
 
 
@@ -72,9 +73,11 @@ export default function CoursePage() {
   };
 
   const handleOk = async () =>  {
+    console.log(userDTO);
     try {
-      const response = await courseAPI.create({name : courseName});
+      const response = await courseAPI.create({name : courseName},localStorage.getItem("user"));
       console.log(response.data);
+      window.location.reload();
     } catch (error) {
       console.error("error create student", error);
     }
@@ -117,6 +120,7 @@ export default function CoursePage() {
     try {
       const response = await courseAPI.delete(id);
       console.log(response.data);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }
@@ -147,7 +151,8 @@ export default function CoursePage() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="right">Id</TableCell>
-                    <TableCell align="right">Name</TableCell>
+                    <TableCell align="right">Name Course</TableCell>
+                    <TableCell align="right">List student</TableCell>
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
                 </TableHead>
@@ -160,12 +165,11 @@ export default function CoursePage() {
 
                       <TableCell align="right">{row.id}</TableCell>
                       <TableCell align="right"><Link to={`/dashboard/exam/${row.id}`}>{row.name}</Link></TableCell>
+                      <TableCell align="right"><Link to={`/dashboard/course/${row.id}/students`}>List student</Link></TableCell>
                       <TableCell align="right" >
-
                       <IconButton size="large" color="inherit" onClick={(event) => handleOpenMenu(event, row.id)}>
                           <Iconify icon={'eva:more-vertical-fill'} />
-                        </IconButton>
-                       
+                      </IconButton>
                       </TableCell>
                     </TableRow>
                   ))}

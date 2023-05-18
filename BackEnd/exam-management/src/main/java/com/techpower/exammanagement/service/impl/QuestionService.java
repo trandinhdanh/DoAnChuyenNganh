@@ -3,9 +3,9 @@ package com.techpower.exammanagement.service.impl;
 import com.techpower.exammanagement.converter.AnswerConverter;
 import com.techpower.exammanagement.converter.QuestionConverter;
 import com.techpower.exammanagement.dto.AnswerDTO;
+import com.techpower.exammanagement.dto.CourseDTO;
 import com.techpower.exammanagement.dto.QuestionDTO;
-import com.techpower.exammanagement.entity.AnswerEntity;
-import com.techpower.exammanagement.entity.QuestionEntity;
+import com.techpower.exammanagement.entity.*;
 import com.techpower.exammanagement.repository.AnswerRepository;
 import com.techpower.exammanagement.repository.QuestionRepository;
 import com.techpower.exammanagement.repository.CourseRepository;
@@ -17,6 +17,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class QuestionService implements IQuestionService {
@@ -122,4 +123,19 @@ public class QuestionService implements IQuestionService {
             questionRepository.deleteById(id);
         }
     }
+
+    @Override
+    public List<QuestionDTO> getQuestionsByExam(long idExam) {
+        ExamEntity exam = examRepository.findOneById(idExam);
+        List<QuestionEntity> questions = questionRepository.findAllByExam(exam);
+        return questionConverter.toDTOs(questions);
+    }
+
+    @Override
+    public boolean isAnswered(long id) {
+      QuestionEntity questionEntity = questionRepository.findOneById(id);
+      return !questionEntity.getAnswer().isEmpty();
+    }
+
+
 }

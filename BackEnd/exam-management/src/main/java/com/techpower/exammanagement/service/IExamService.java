@@ -1,8 +1,9 @@
 package com.techpower.exammanagement.service;
 
-import com.techpower.exammanagement.controller.ouput.ExamOutput;
+import com.techpower.exammanagement.controller.output.ExamOutput;
 import com.techpower.exammanagement.dto.ExamDTO;
 import com.techpower.exammanagement.dto.QuestionDTO;
+import com.techpower.exammanagement.dto.StudentDTO;
 
 import java.util.List;
 
@@ -13,4 +14,6 @@ public interface IExamService {
     ExamDTO update(ExamDTO dto);
 
     void remove(long id);
+    List<ExamDTO> getExamsByCourse(long idCourse);
+    boolean isExamCompleted(Long examId);
 }

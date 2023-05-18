@@ -20,6 +20,12 @@ import ProtectedRoute from './shared/ProtectedRoute';
 import ExamPage from './pages/exam/ExamPage';
 import CoursePage from './pages/course/CoursePage';
 import UpdateCourse from './pages/course/UpdateCourse';
+import UpdateExam from './pages/exam/UpdateExam';
+import QuestionPage from './pages/question/QuestionPage';
+import NewQuestionPage from './pages/question/NewQuestionPage';
+import UpdateQuestionPage from './pages/question/UpdateQuestionPage';
+import AddStudentToCourse from './pages/course/AddStudentToCourse';
+import StudentOfCoursePage from './pages/course/StudentOfCoursePage';
 
 
 
@@ -63,7 +69,6 @@ export default function Router() {
       element: (
         <ProtectedRoute
           roles={"TEACHER"}
-        // defaultPath={teacherDefaultPath}
         >
           <DashboardLayout>
             <Navigate to={teacherDefaultPath} replace />
@@ -75,8 +80,14 @@ export default function Router() {
         { path: "studentUpdate/:id", element: <UpdateStudent /> },
         { path: "studentNew", element: <NewStudent /> },
         { path: "exam/:id", element: <ExamPage /> },
+        { path: "examUpdate/:id", element: <UpdateExam /> },
         { path: "course", element: <CoursePage /> },
         { path: "courseUpdate/:id", element: <UpdateCourse /> },
+        { path: "question/:id", element: <QuestionPage /> },
+        { path: "questionNew/:id", element: <NewQuestionPage /> },
+        { path: "questionUpdate/:id", element: <UpdateQuestionPage /> },
+        { path: "course/:id/add", element: <AddStudentToCourse /> },
+        { path: "course/:id/students", element: <StudentOfCoursePage /> },
       ],
     },
     

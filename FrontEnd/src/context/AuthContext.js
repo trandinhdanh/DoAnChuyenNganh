@@ -35,8 +35,11 @@ const AuthProvider = ({children}) => {
         return true;
     };
 
+    
     const logout = () => {
         localStorage.removeItem("access_token");
+        
+        localStorage.removeItem("user");
         setUser(null)
     }
 
@@ -48,7 +51,7 @@ const AuthProvider = ({children}) => {
                     const jwtToken = response.headers.authorization;
                     localStorage.setItem('access_token', jwtToken);
                     setUser({...response.data.userDTO});
-
+                    localStorage.setItem('user', response.data.userDTO.id);
                     resolve();
                 })
                 .catch(error => {
@@ -82,6 +85,7 @@ const AuthProvider = ({children}) => {
     return (
         <AuthContext.Provider value={{
             user,
+
             isUserAuthenticated,
             getScopes,
             logout,
