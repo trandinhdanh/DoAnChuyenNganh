@@ -42,7 +42,7 @@ export default function Router() {
 
   const adminDefaultPath = "/dashboard/app";
   const teacherDefaultPath = "/dashboard/student";
-  const studentDefaultPath = "/dashboard/blog";
+  const studentDefaultPath = "/dashboard/courseStudent";
   const routes = useRoutes([
     {
       path: "login",
@@ -106,8 +106,6 @@ export default function Router() {
         </ProtectedRoute>
       ),
       children: [
-        { path: "products", element: <ProductsPage /> },
-        { path: "blog", element: <BlogPage /> },
         { path: "courseStudent", element: <GuestCoursePage /> },
         { path: "courseStudent/:id", element: <GuestExamPage /> },
         { path: "questionStudent/:id", element: <GuestQuestionPage /> },

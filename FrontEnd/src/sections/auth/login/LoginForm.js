@@ -15,7 +15,7 @@ export default function LoginForm() {
   const { login, getScopes } = useAuth();
   const adminDefaultPath = "/dashboard/app";
   const teacherDefaultPath = "/dashboard/student";
-  const studentDefaultPath = "/dashboard/blog";
+  const studentDefaultPath = "/dashboard/courseStudent";
 
   const [values, setValues] = useState({
     username: '',
