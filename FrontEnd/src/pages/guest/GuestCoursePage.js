@@ -11,7 +11,7 @@ export default function GuestCoursePage() {
   const userId = localStorage.getItem('user');
   
   useEffect(() => {
-    const fetchCourses = async (userId) => {
+    const fetchCourses = async () => {
       console.log(userId);
       try {
         const data = await courseAPI.getCourseByUser(userId);
