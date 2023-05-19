@@ -156,7 +156,6 @@ export default function ExamPage() {
                     <TableCell align="right">Id</TableCell>
                     <TableCell align="right">Name Exam</TableCell>
                     <TableCell align="right">Action</TableCell>
-                    <TableCell align="right">Process</TableCell>
                   </TableRow>
                 </TableHead>
                 <TableBody>

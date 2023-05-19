@@ -1,7 +1,7 @@
 import { Helmet } from 'react-helmet-async';
 import { filter } from 'lodash';
 import { useEffect, useState } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
+import { Link, useNavigate, useParams } from 'react-router-dom';
 
 // @mui
 import {
@@ -176,9 +176,9 @@ export default function StudentOfCoursePage() {
                       key={row.id}
                       sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                     >
-
+{/* course/:id/result */}
                       <TableCell align="right">{row.id}</TableCell>
-                      <TableCell align="right">{row.fullName}</TableCell>
+                      <TableCell align="right"><Link to={`/dashboard/course/${id}-${row.id}/result`}>{row.fullName}</Link></TableCell>
                       <TableCell align="right">{fDate(row.birthday)}</TableCell>
                       <TableCell align="right" onClick={() => { console.log("delete") }}>
 

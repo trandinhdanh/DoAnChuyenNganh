@@ -13,8 +13,10 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.text.Normalizer;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 @Service
 public class TeacherService implements ITeacherService {
@@ -45,32 +47,37 @@ public class TeacherService implements ITeacherService {
     @Override
     public TeacherDTO save(TeacherDTO dto) {
         TeacherEntity entity = teacherConverter.toEntity(dto);
-
         User user = new User();
-        user.setUserName(dto.getFullName().replaceAll("\\s+", "").toLowerCase());
-        StringBuilder password = new StringBuilder();
-        if (dto.getBirthday().getDate() > 9) {
-            password.append(dto.getBirthday().getDate());
-        } else {
-            password.append("0");
-            password.append(dto.getBirthday().getDate());
+        String username = Normalizer.normalize(dto.getFullName(), Normalizer.Form.NFD)
+                .replaceAll("\\p{InCombiningDiacriticalMarks}+", "")
+                .replaceAll("\\s", "")
+                .toLowerCase();
+        if (userRepository.findOneByUserName(username) == null) {
+            user.setUserName(username);
+            StringBuilder password = new StringBuilder();
+            if (dto.getBirthday().getDate() > 9) {
+                password.append(dto.getBirthday().getDate());
+            } else {
+                password.append("0");
+                password.append(dto.getBirthday().getDate());
+            }
+            if (dto.getBirthday().getMonth() + 1 > 9) {
+                password.append(dto.getBirthday().getMonth() + 1);
+            } else {
+                password.append("0");
+                password.append(dto.getBirthday().getMonth() + 1);
+            }
+            password.append((dto.getBirthday().getYear() + 1900));
+            user.setPassword(passwordEncoder.encode(password.toString()));
+            user.setStatus(Status.ACTIVE);
+            user.setRole(Role.TEACHER);
+            userRepository.save(user);
+            entity.setUser(user);
+            entity.setBirthday(dto.getBirthday());
+            teacherRepository.save(entity);
+            return teacherConverter.toDTO(entity);
         }
-        if (dto.getBirthday().getMonth() + 1 > 9) {
-            password.append(dto.getBirthday().getMonth() + 1);
-        } else {
-            password.append("0");
-            password.append(dto.getBirthday().getMonth() + 1);
-        }
-        password.append((dto.getBirthday().getYear() + 1900));
-        user.setPassword(passwordEncoder.encode(password.toString()));
-        user.setStatus(Status.ACTIVE);
-
-        user.setRole(Role.TEACHER);
-        userRepository.save(user);
-
-        entity.setUser(user);
-        teacherRepository.save(entity);
-        return teacherConverter.toDTO(entity);
+        return new TeacherDTO();
     }
 
     @Override

@@ -20,5 +20,5 @@ public interface ICourseService {
 
     CourseDTO addStudentToCourse(long idCourse, List<Long> idStudent);
 
-    List<CourseDTO> getCourseByStudent(long idStudent);
+    List<CourseDTO> getAllCourseByStudent(long idUser);
 }

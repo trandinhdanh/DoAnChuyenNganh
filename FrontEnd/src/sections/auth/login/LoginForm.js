@@ -1,9 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-// @mui
-import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox, FormControlLabel, FormControl, FormLabel, FormHelperText, Button } from '@mui/material';
+import { Link, Stack, IconButton, InputAdornment, TextField, Checkbox, FormControlLabel, FormControl, FormLabel, FormHelperText, Button, Alert, Snackbar } from '@mui/material';
 import { LoadingButton } from '@mui/lab';
-// components
 import Iconify from '../../../components/iconify';
 import { useAuth } from "../../../context/AuthContext";
 // ----------------------------------------------------------------------
@@ -13,9 +11,9 @@ export default function LoginForm() {
 
   const navigate = useNavigate();
   const { login, getScopes } = useAuth();
-  const adminDefaultPath = "/dashboard/app";
+  const adminDefaultPath = "/dashboard/teacher";
   const teacherDefaultPath = "/dashboard/student";
-  const studentDefaultPath = "/dashboard/blog";
+  const studentDefaultPath = "/dashboard/courseStudent";
 
   const [values, setValues] = useState({
     username: '',
@@ -23,6 +21,9 @@ export default function LoginForm() {
   });
 
   const { username, password } = values;
+  const [snackbarOpen, setSnackbarOpen] = useState(false);
+  const [snackbarMessage, setSnackbarMessage] = useState('');
+  const [snackbarType, setSnackbarType] = useState('success');
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -37,27 +38,45 @@ export default function LoginForm() {
     event.preventDefault();
     try {
       await login(values);
-      console.log("login success");
-      if (getScopes().includes("ADMIN")) {
-        navigate(adminDefaultPath)
-      }
-      else if (getScopes().includes("TEACHER")) {
-        navigate(teacherDefaultPath)
-      }
-      else if (getScopes().includes("STUDENT")) {
-        navigate(studentDefaultPath)
-      }
+      setSnackbarMessage('Login successful.');
+      setSnackbarType('success');
+      setSnackbarOpen(true);
+      console.log("login");
+
+        if (getScopes().includes("ADMIN")) {
+          navigate(adminDefaultPath)
+        }
+        else if (getScopes().includes("TEACHER")) {
+          navigate(teacherDefaultPath)
+        }
+        else if (getScopes().includes("STUDENT")) {
+          navigate(studentDefaultPath)
+        }
       // Handle successful login
+   
     } catch (error) {
       console.log("login error", error)
       // Handle login error
+      setSnackbarMessage('Login failed. Please try again.');
+      setSnackbarType('error');
+      setSnackbarOpen(true);
     }
   };
-
+  const handleCloseSnackbar = () => {
+    setSnackbarOpen(false);
+  };
   const [showPassword, setShowPassword] = useState(false);
 
   return (
     <>
+      <Snackbar
+        open={snackbarOpen}
+        autoHideDuration={4000}
+        onClose={handleCloseSnackbar}
+        message={snackbarMessage}
+        severity={snackbarType}
+        anchorOrigin={{ vertical: 'top', horizontal: 'right' }}
+      />
       <form onSubmit={handleSubmit}>
         <Stack spacing={3}>
 

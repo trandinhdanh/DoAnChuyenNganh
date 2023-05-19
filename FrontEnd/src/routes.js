@@ -26,6 +26,10 @@ import NewQuestionPage from './pages/question/NewQuestionPage';
 import UpdateQuestionPage from './pages/question/UpdateQuestionPage';
 import AddStudentToCourse from './pages/course/AddStudentToCourse';
 import StudentOfCoursePage from './pages/course/StudentOfCoursePage';
+import GuestCoursePage from './pages/guest/GuestCoursePage';
+import GuestExamPage from './pages/guest/GuestExamPage';
+import GuestQuestionPage from './pages/guest/GuestQuestionPage';
+import ResultPage from './pages/result/ResultPage';
 
 
 
@@ -39,7 +43,7 @@ export default function Router() {
 
   const adminDefaultPath = "/dashboard/app";
   const teacherDefaultPath = "/dashboard/student";
-  const studentDefaultPath = "/dashboard/blog";
+  const studentDefaultPath = "/dashboard/courseStudent";
   const routes = useRoutes([
     {
       path: "login",
@@ -88,6 +92,7 @@ export default function Router() {
         { path: "questionUpdate/:id", element: <UpdateQuestionPage /> },
         { path: "course/:id/add", element: <AddStudentToCourse /> },
         { path: "course/:id/students", element: <StudentOfCoursePage /> },
+        { path: "course/:id/result", element: <ResultPage /> },
       ],
     },
     
@@ -103,8 +108,9 @@ export default function Router() {
         </ProtectedRoute>
       ),
       children: [
-        { path: "products", element: <ProductsPage /> },
-        { path: "blog", element: <BlogPage /> },
+        { path: "courseStudent", element: <GuestCoursePage /> },
+        { path: "courseStudent/:id", element: <GuestExamPage /> },
+        { path: "questionStudent/:id", element: <GuestQuestionPage /> },
       ],
     },
 

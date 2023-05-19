@@ -24,6 +24,11 @@ const courseAPI = {
     console.log(response.data)
     return response.data;
   },
+  getCourseByUser: async (idUser) => {
+    const response = await axios.get(`${BASE_URL}/api/v1/user/${idUser}/courses`, getAuthConfig());
+    console.log(response.data)
+    return response.data;
+  },
   addStudents: async (id,idStudents) => {
     const response = await axios.post(`${BASE_URL}/api/v1/course/${id}/${idStudents}`, getAuthConfig());
     console.log(response.data)
@@ -52,7 +57,12 @@ const courseAPI = {
   delete: async (id) => {
     const response = await axios.delete(`${BASE_URL}/api/v1/course/${id}`, getAuthConfig());
     return response.data;
-  }
+  },
+  getScoreUser: async (idCourse,idUser) => {
+    const response = await axios.get(`${BASE_URL}/api/v1/students/${idCourse}/${idUser}`, getAuthConfig());
+    console.log(response.data)
+    return response.data;
+  },
 };
 
 export default courseAPI;

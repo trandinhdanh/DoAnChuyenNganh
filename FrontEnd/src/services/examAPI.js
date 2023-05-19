@@ -42,6 +42,13 @@ const examAPI = {
   delete: async (id) => {
     const response = await axios.delete(`${BASE_URL}/api/v1/exam/${id}`, getAuthConfig());
     return response.data;
+  },
+  submit: async (idUser,idExam,score) => {
+    const response = await axios.put(`${BASE_URL}/api/v1/submit/${idUser}/${idExam}`,score, {
+      ...getAuthConfig(),
+      'Content-Type': 'multipart/form-data'
+});
+    return response.data;
   }
 };
 

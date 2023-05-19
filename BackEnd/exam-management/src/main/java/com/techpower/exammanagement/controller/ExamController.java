@@ -1,8 +1,7 @@
 package com.techpower.exammanagement.controller;
+
 import com.techpower.exammanagement.controller.output.ExamOutput;
-import com.techpower.exammanagement.dto.CourseDTO;
 import com.techpower.exammanagement.dto.ExamDTO;
-import com.techpower.exammanagement.dto.StudentDTO;
 import com.techpower.exammanagement.service.IExamService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -32,6 +31,7 @@ public class ExamController {
     public ExamDTO save(@RequestBody ExamDTO dto, @PathVariable long idCourse) {
         return iExamService.save(dto, idCourse);
     }
+
     @PutMapping("/exam/{id}")
     public ExamDTO update(@PathVariable long id, @RequestBody ExamDTO dto) {
         dto.setId(id);

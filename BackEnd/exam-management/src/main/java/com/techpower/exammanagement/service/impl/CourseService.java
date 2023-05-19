@@ -32,6 +32,8 @@ public class CourseService implements ICourseService {
     @Autowired
     private UserRepository userRepository;
     @Autowired
+    private ResultRepository resultRepository;
+    @Autowired
     private CourseConverter courseConverter;
     @Autowired
     private StudentConverter studentConverter;
@@ -75,6 +77,7 @@ public class CourseService implements ICourseService {
                 for (QuestionEntity questionEntity : questionRepository.findAllByExam(examEntity)) {
                     answerRepository.deleteAllByQuestion(questionEntity);
                 }
+                resultRepository.deleteAllByExam(examEntity);
                 questionRepository.deleteAllByExam(examEntity);
 
             }
@@ -112,18 +115,30 @@ public class CourseService implements ICourseService {
         courseEntity.setStudents(students);
         CourseDTO result = courseConverter.toDTO(courseRepository.save(courseEntity));
         result.setStudents(studentDTOS);
+
+        for (Long idStudent : idStudents) {
+            for (ExamEntity examEntity : examRepository.findAllByCourse(courseEntity)) {
+                ResultEntity resultEntity = new ResultEntity();
+                resultEntity.setScore(0.0);
+                resultEntity.setComplete(false);
+                resultEntity.setStudent(studentRepository.findOneById(idStudent));
+                resultEntity.setExam(examEntity);
+                resultRepository.save(resultEntity);
+            }
+        }
         return result;
     }
 
     @Override
-    public List<CourseDTO> getCourseByStudent(long idStudent) {
-        StudentEntity studentEntity = studentRepository.findOneById(idStudent);
-        List<CourseEntity> courses = studentEntity.getCourses();
-        List<CourseDTO> courseDTOS = new ArrayList<>();
-        for (CourseEntity courseEntity: courses) {
-            courseDTOS.add(courseConverter.toDTO(courseEntity));
+    public List<CourseDTO> getAllCourseByStudent(long idUser) {
+//        StudentEntity studentEntity = studentRepository.findOneById(idStudent);
+        StudentEntity studentEntity = studentRepository.findOneByUser(userRepository.findOneById(idUser));
+        List<CourseEntity> courseEntities = courseRepository.findCoursesByStudentId(studentEntity.getId());
+        List<CourseDTO> result = new ArrayList<>();
+        for (CourseEntity courseEntity : courseEntities) {
+            result.add(courseConverter.toDTO(courseEntity));
         }
-        return courseDTOS;
-}
+        return result;
+    }
 
 }
