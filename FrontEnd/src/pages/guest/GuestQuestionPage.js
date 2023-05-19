@@ -99,14 +99,14 @@ function GuestQuestionPage() {
           <>
               <Typography variant="h3">Bài thi: {exam.name}</Typography>
           <Typography variant="h4" style={{ margin: '0' }}>Bạn đã hoàn thành bài thi</Typography>
-          <Typography variant='body1' sx={{ mb: '15px' }}>Điểm số: {result.score} đỉm.</Typography>
+          <Typography variant='body1' sx={{ mb: '15px' }}>Điểm số: {result.score} điểm.</Typography>
           <Button onClick={hanldeBack} variant="contained" >Quay lại trang chủ</Button>
           </>
          ):(
           <>
             <Typography variant="h3">Bài thi: {exam.name}</Typography>
           <Typography variant='subtitle1' sx={{ m: '15px 0' }}>Bạn làm được : {count} / {questions.length} câu hỏi.</Typography>
-          <Typography variant='body1' sx={{ mb: '15px' }}>Điểm số: {(10 / questions.length) * count} đỉm.</Typography>
+          <Typography variant='body1' sx={{ mb: '15px' }}>Điểm số: {(10 / questions.length) * count} điểm.</Typography>
           <Button onClick={hanldeBack} variant="contained" >Quay lại trang chủ</Button>
           </>
          )}

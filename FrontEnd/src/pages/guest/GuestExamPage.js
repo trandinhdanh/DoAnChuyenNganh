@@ -57,7 +57,7 @@ export default function GuestExamPage() {
                   <Link to={`/dashboard/questionStudent/${exam.id}`}>{exam.name}</Link>
                 </Typography>
 
-                <Chip color="success" label='success' icon={<Iconify icon="teenyicons:tick-circle-outline" />} />
+                {/* <Chip color="success" label='success' icon={<Iconify icon="teenyicons:tick-circle-outline" />} /> */}
 
               </Stack>
             </CardContent>
