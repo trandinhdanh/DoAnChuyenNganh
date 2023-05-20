@@ -123,11 +123,12 @@ export default function TeacherPage() {
         teacherApi.delete(id);
         console.log("deleted");
         setIdRow(-1);
+        window.location.reload();
       }
     } catch (error) {
       console.error("deleted error", error);
     }
-    // navigate('/dashboard/teacher')
+    
   }
   return (
     <>

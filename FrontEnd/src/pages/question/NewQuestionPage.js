@@ -1,10 +1,11 @@
 import React, { useState } from 'react';
-import { useParams } from 'react-router-dom';
+import { useNavigate, useParams } from 'react-router-dom';
 import { Button, Stack, Container, TextField, FormControlLabel, RadioGroup, Radio } from '@mui/material';
 import questionAPI from '../../services/questionAPI';
 
 export default function NewQuestionPage() {
   const { id } = useParams();
+  const navigate = useNavigate()
   const [questionState, setQuestionState] = useState('');
   const [answers, setAnswers] = useState([]);
   const [selectedAnswer, setSelectedAnswer] = useState(-1);
@@ -42,11 +43,11 @@ export default function NewQuestionPage() {
       question: questionState,
       answers: formattedAnswers,
     };
-
     try {
       const response = await questionAPI.create(id, questionData);
       console.log(response.data);
-      // window.location.reload();
+ 
+      window.location.reload();
     } catch (error) {
       console.error('error create question', error);
     }

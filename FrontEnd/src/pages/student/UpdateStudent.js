@@ -44,7 +44,7 @@ export default function UpdateStudent() {
     console.error(error);
   }
 
-  navigate("/dashboard/teacher");
+  navigate("/dashboard/student");
   };
 
   return (

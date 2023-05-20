@@ -55,6 +55,7 @@ export default function QuestionPage() {
       <List>
         {questions?.map((question,index) => (
              <ListItem key={question.id} sx={{ border: '1px solid', borderRadius: '4px', my: 2 }}>
+             <Stack spacing={2} direction={"column"}>
              <ListItemText primary={`${index + 1}. ${question.question}`} />
              <FormControl component="fieldset">
                <RadioGroup>
@@ -73,8 +74,12 @@ export default function QuestionPage() {
                     ))}
                 </RadioGroup>
              </FormControl>
+             <div>
+
              <Button variant="outlined" onClick={() => handleEditQuestion(question.id)}>Edit</Button>
              <Button variant="outlined" onClick={() => handleDeleteQuestion(question.id)}>Delete</Button>
+             </div>
+             </Stack>
            </ListItem>
          ))}
        </List>

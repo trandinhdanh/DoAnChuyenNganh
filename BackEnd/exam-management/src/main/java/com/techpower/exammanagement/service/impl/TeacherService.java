@@ -77,7 +77,30 @@ public class TeacherService implements ITeacherService {
             teacherRepository.save(entity);
             return teacherConverter.toDTO(entity);
         }
-        return new TeacherDTO();
+        else {
+            StringBuilder password = new StringBuilder();
+            if (dto.getBirthday().getDate() > 9) {
+                password.append(dto.getBirthday().getDate());
+            } else {
+                password.append("0");
+                password.append(dto.getBirthday().getDate());
+            }
+            if (dto.getBirthday().getMonth() + 1 > 9) {
+                password.append(dto.getBirthday().getMonth() + 1);
+            } else {
+                password.append("0");
+                password.append(dto.getBirthday().getMonth() + 1);
+            }
+            password.append((dto.getBirthday().getYear() + 1900));
+            user.setUserName(username + password.toString());
+            user.setPassword(passwordEncoder.encode(password.toString()));
+            user.setStatus(Status.ACTIVE);
+            user.setRole(Role.STUDENT);
+            userRepository.save(user);
+            entity.setUser(user);
+            teacherRepository.save(entity);
+            return teacherConverter.toDTO(entity);
+        }
     }
 
     @Override

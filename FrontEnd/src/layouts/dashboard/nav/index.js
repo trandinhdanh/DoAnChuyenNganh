@@ -44,6 +44,9 @@ export default function Nav({ openNav, onCloseNav }) {
 
   const { getScopes } = useAuth();
 
+
+  const usn = localStorage.getItem("userName");
+
   // const scopes = getScopes();
   useEffect(() => {
     if (openNav) {
@@ -78,7 +81,7 @@ export default function Nav({ openNav, onCloseNav }) {
 
             <Box sx={{ ml: 2 }}>
               <Typography variant="subtitle2" sx={{ color: 'text.primary' }}>
-                {account.displayName}
+                {usn}
               </Typography>
 
               <Typography variant="body2" sx={{ color: 'text.secondary' }}>

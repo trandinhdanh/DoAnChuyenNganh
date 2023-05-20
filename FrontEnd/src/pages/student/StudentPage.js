@@ -135,6 +135,7 @@ export default function StudentPage() {
     try {
       const response = await studentApi.delete(id);
       console.log(response.data);
+      window.location.reload();
     } catch (error) {
       console.error(error);
     }

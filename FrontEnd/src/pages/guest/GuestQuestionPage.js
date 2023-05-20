@@ -1,4 +1,4 @@
-import { Button, Chip, FormControl, FormControlLabel, List, ListItem, ListItemText, Radio, RadioGroup, Typography } from '@mui/material';
+import { Button, Chip, FormControl, FormControlLabel, List, ListItem, ListItemText, Radio, RadioGroup, Stack, Typography } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import examAPI from '../../services/examAPI';
@@ -147,6 +147,7 @@ function GuestQuestionPage() {
           <List>
             {questions?.map((question, questionIndex) => (
               <ListItem key={questionIndex} sx={{ border: '1px solid', borderRadius: '4px', my: 2 }}>
+                <Stack spacing={2} direction={'column'}>
                 <ListItemText primary={`Câu ${questionIndex + 1}. ${question.question}`} />
                 <FormControl component="fieldset">
                   <RadioGroup
@@ -163,6 +164,7 @@ function GuestQuestionPage() {
                     ))}
                   </RadioGroup>
                 </FormControl>
+                </Stack>
               </ListItem>
             ))}
           </List>
