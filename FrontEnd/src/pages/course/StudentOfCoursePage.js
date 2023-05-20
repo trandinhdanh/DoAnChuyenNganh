@@ -165,7 +165,8 @@ export default function StudentOfCoursePage() {
                 <TableHead>
                   <TableRow>
                     <TableCell align="right">Id</TableCell>
-                    <TableCell align="right">Name</TableCell>
+                    <TableCell align="right" >{""}</TableCell>
+                    <TableCell align="left">Name</TableCell>
                     <TableCell align="right">Birth Day</TableCell>
                     <TableCell align="right">Action</TableCell>
                   </TableRow>
@@ -178,7 +179,8 @@ export default function StudentOfCoursePage() {
                     >
 {/* course/:id/result */}
                       <TableCell align="right">{row.id}</TableCell>
-                      <TableCell align="right"><Link to={`/dashboard/course/${id}-${row.id}/result`}>{row.fullName}</Link></TableCell>
+                      <TableCell align="right">{""}</TableCell>
+                      <TableCell align="left"><Link to={`/dashboard/course/${id}-${row.id}/result`}>{row.fullName}</Link></TableCell>
                       <TableCell align="right">{fDate(row.birthday)}</TableCell>
                       <TableCell align="right" onClick={() => { console.log("delete") }}>
 

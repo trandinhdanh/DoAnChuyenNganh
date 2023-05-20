@@ -34,6 +34,7 @@ public class StudentService implements IStudentService {
     private ExamRepository examRepository;
     @Autowired
     private ResultRepository resultRepository;
+
     @Override
     public List<StudentDTO> getAll() {
         List<StudentDTO> result = new ArrayList<>();
@@ -80,8 +81,32 @@ public class StudentService implements IStudentService {
             entity.setUser(user);
             studentRepository.save(entity);
             return studentConverter.toDTO(entity);
+        } else {
+            StringBuilder password = new StringBuilder();
+            if (dto.getBirthday().getDate() > 9) {
+                password.append(dto.getBirthday().getDate());
+            } else {
+                password.append("0");
+                password.append(dto.getBirthday().getDate());
+            }
+            if (dto.getBirthday().getMonth() + 1 > 9) {
+                password.append(dto.getBirthday().getMonth() + 1);
+            } else {
+                password.append("0");
+                password.append(dto.getBirthday().getMonth() + 1);
+            }
+            password.append((dto.getBirthday().getYear() + 1900));
+            user.setUserName(username + password.toString());
+            user.setPassword(passwordEncoder.encode(password.toString()));
+            user.setStatus(Status.ACTIVE);
+            user.setRole(Role.STUDENT);
+            userRepository.save(user);
+            entity.setUser(user);
+            studentRepository.save(entity);
+            return studentConverter.toDTO(entity);
         }
-        return new StudentDTO();
+
+
     }
 
     @Override

@@ -28,6 +28,8 @@ const MENU_OPTIONS = [
 export default function AccountPopover() {
   const [open, setOpen] = useState(null);
 const {logout} = useAuth();
+
+const usn = localStorage.getItem("userName");
   const handleOpen = (event) => {
     setOpen(event.currentTarget);
   };
@@ -79,10 +81,10 @@ const {logout} = useAuth();
       >
         <Box sx={{ my: 1.5, px: 2.5 }}>
           <Typography variant="subtitle2" noWrap>
-            {account.displayName}
+            {usn}
           </Typography>
           <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            {account.email}
+            {usn}@gmail.com
           </Typography>
         </Box>
 

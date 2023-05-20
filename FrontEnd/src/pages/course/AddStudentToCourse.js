@@ -39,7 +39,7 @@ function AddStudentToCourse() {
   const [selected, setSelected] = useState([]);
   // load sản phẩm 
 const { id } = useParams();
-const { navigate } = useNavigate();
+const  navigate  = useNavigate();
   const [students, setStudent] = useState([]);
 
   useEffect(() => {
@@ -63,11 +63,12 @@ const { navigate } = useNavigate();
     try {
       const response = await courseAPI.addStudents(id, selected);
       console.log(response.data);
+      navigate(`/dashboard/course/${id}/students`)
     } catch (error) {
       console.error("error create student", error);
     }
    
-      navigate(`/dashboard/course`);
+      // navigate(`/dashboard/course`);
   };
 
   const handleClick = (event, id) => {

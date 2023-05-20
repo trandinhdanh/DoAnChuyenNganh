@@ -52,6 +52,7 @@ const AuthProvider = ({children}) => {
                     localStorage.setItem('access_token', jwtToken);
                     setUser({...response.data.userDTO});
                     localStorage.setItem('user', response.data.userDTO.id);
+                    localStorage.setItem('userName', response.data.userDTO.userName);
                     resolve();
                 })
                 .catch(error => {

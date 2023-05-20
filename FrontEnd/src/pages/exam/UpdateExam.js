@@ -23,6 +23,7 @@ export default function UpdateExam() {
     e.preventDefault();
     try{
     const response = await examAPI.update( {name : nameExam},id);
+    window.location.reload();
     console.log(response);
   } catch (error) {
     console.error(error);
